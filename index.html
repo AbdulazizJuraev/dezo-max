@@ -18,11 +18,13 @@
                     <span class="three"></span>
                 </button>
 
-                <a href="#" class="navbar-brand">
-                    <img src="img/logo/dezo max.png" alt="logo">
-                </a>
+                <div class="navbar-logo-container">
+                    <a href="#" class="navbar-brand">
+                        <img src="img/logo/dezo max.png" alt="DezoMax Logo">
+                    </a>
+                </div>
 
-                <nav class="">
+                <nav class="navbar-menu">
                     <ul class="navbar-nav">
                         <li><a href="#" class="navbar-link" data-route="home" data-i18n="nav.home">Asosiy</a></li>
                         <li><a href="#" class="navbar-link" data-route="tv" data-i18n="nav.tv">TV</a></li>
@@ -225,125 +227,21 @@
         </div>
 
         
-<div id="carouselExampleIndicators" class="carousel slide">
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-  </div>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-     
- <section class="banner">
-                <div class="banner-card">
-                    <img src="img/poster.jpg" alt="banner" class="banner-img">
-
-
-
-                    <div class="card-content">
-                        <div class="card-info">
-                            <div class="genre4">
-                                <ion-icon name="film"></ion-icon>
-                                <span class="asos">Fantastik Tortlik</span>
-                            </div>
-
-                            <div class="genre4">
-                                <ion-icon name="calendar"></ion-icon>
-                                <span class="asos">2025</span>
-                            </div>
-
-                            <div class="genre4">
-                                <ion-icon name="time"></ion-icon>
-                                <span class="asos">2h 11min</span>
-                            </div>
-
-                            <div class="quality">4k</div>
-                        </div>
-                        <h2 class="card-title">Birinch boshlanish</h2>
-                    </div>
-                </div>
-
-            </section>
-
-    </div>
-    <div class="carousel-item">
-    
-<section class="banner">
-                <div class="banner-card">
-                    <img src="img/20653dad1856cd6aae435b229976d1c6.jpg" alt="banner" class="banner-img">
-
-
-
-                    <div class="card-content">
-                        <div class="card-info">
-                            <div class="genre4">
-                                <ion-icon  name="film"></ion-icon>
-                                <span class="asos">Marver</span>
-                            </div>
-
-                            <div class="genre4">
-                                <ion-icon name="calendar"></ion-icon>
-                                <span class="asos">2025</span>
-                            </div>
-
-                            <div class="genre4">
-                                <ion-icon name="time"></ion-icon>
-                                <span class="asos">2h 11min</span>
-                            </div>
-
-                            <div class="quality">4k</div>
-                        </div>
-                        <h2 class="card-title">Yangi Qasoskorlar</h2>
-                    </div>
-                </div>
-
-            </section>
-
-    </div>
-    <div class="carousel-item">
-      
-<section class="banner">
-                <div class="banner-card">
-                    <img src="img/poster.jpg" alt="banner" class="banner-img">
-
-
-
-                    <div class="card-content">
-                        <div class="card-info">
-                            <div class="genre4">
-                                <ion-icon name="film"></ion-icon>
-                                <span class="asos">Fantastik Tortlik</span>
-                            </div>
-
-                            <div class="genre4">
-                                <ion-icon name="calendar"></ion-icon>
-                                <span class="asos">2025</span>
-                            </div>
-
-                            <div class="genre4">
-                                <ion-icon name="time"></ion-icon>
-                                <span class="asos">2h 11min</span>
-                            </div>
-
-                            <div class="quality">4k</div>
-                        </div>
-                        <h2 class="card-title">Birinch boshlanish</h2>
-                    </div>
-                </div>
-
-            </section>
-
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden"></span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden"></span>
-  </button>
-</div>
+        <!-- Banner Carousel -->
+        <div class="banner-carousel-container">
+            <div class="banner-carousel" id="bannerCarousel">
+                <!-- Carousel items will be dynamically generated -->
+            </div>
+            <div class="carousel-indicators" id="carouselIndicators">
+                <!-- Indicators will be dynamically generated -->
+            </div>
+            <button class="carousel-control-prev" id="carouselPrev" aria-label="Previous slide">
+                <ion-icon name="chevron-back"></ion-icon>
+            </button>
+            <button class="carousel-control-next" id="carouselNext" aria-label="Next slide">
+                <ion-icon name="chevron-forward"></ion-icon>
+            </button>
+        </div>
 
 
         <main>

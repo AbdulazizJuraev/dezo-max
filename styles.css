@@ -123,7 +123,7 @@ header, nav {
     margin: auto;
 }
 
-.navbar, .banner, .movies, .category, .live{ padding: 0 var(--padding-x);}
+.banner, .movies, .category, .live{ padding: 0 var(--padding-x);}
 
 .section-heading{
     font-size: var(--section-heading);
@@ -146,65 +146,91 @@ header, nav {
 
 /*HEADER*/
 
-.navbar-brand{
-    flex-shrink: 0;
-    height: 40px;
-    width: auto;
-    display: flex;
-    align-items: center;
-    margin-right: 40px;
-}
-
-.navbar-brand img{
-    height: 100%;
-    width: auto;
-    max-width: 150px;
-    object-fit: contain;
-    object-position: left center;
-}
-
 .navbar{
     height: 100px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
     position: relative;
+    padding: 0 var(--padding-x);
 }
 
 .navbar-menu-btn{ 
     display: none;
     flex-shrink: 0;
+    z-index: 10;
 }
 
-nav{ 
+.navbar-logo-container{
+    flex-shrink: 0;
+    width: auto;
+    min-width: 120px;
+    max-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.navbar-brand{
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 100%;
+}
+
+.navbar-brand img{
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: left center;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+.navbar-menu{ 
     flex: 1;
     min-width: 0;
-    margin-right: 20px;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
 }
 
 .navbar-nav{ 
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
+    flex-wrap: nowrap;
+    gap: 8px;
     align-items: center;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
     .navbar-nav li{
         flex-shrink: 0;
-    }
-    
-    .navbar-nav li:not(:last-child) {
-        margin-right: 0;
+        white-space: nowrap;
     }
 
 .navbar-link{ 
     font-size: var(--font-size-small);
     font-weight: var(--fw5);
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
-    .navbar-link:hover{ color: var(--light-azure);}
+    .navbar-link:hover{ 
+        color: var(--light-azure);
+        background: rgba(33, 150, 243, 0.1);
+    }
+    
+    .navbar-link.active{
+        color: var(--light-azure);
+        background: rgba(33, 150, 243, 0.15);
+    }
 
 .indicator{ position: relative;}
 
@@ -298,6 +324,118 @@ nav{
 /*BANNER SECTION*/
 
 .banner{ margin-bottom: 60px;}
+
+/* Banner Carousel Container */
+.banner-carousel-container{
+    position: relative;
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+.banner-carousel{
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.carousel-item{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+    transform: translateX(100%);
+    pointer-events: none;
+}
+
+.carousel-item.active{
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    z-index: 2;
+}
+
+.carousel-item.prev{
+    transform: translateX(-100%);
+    z-index: 1;
+}
+
+/* Carousel Controls */
+.carousel-control-prev,
+.carousel-control-next{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--white);
+    font-size: 24px;
+}
+
+.carousel-control-prev{
+    left: 20px;
+}
+
+.carousel-control-next{
+    right: 20px;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover{
+    background: rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-control-prev:active,
+.carousel-control-next:active{
+    transform: translateY(-50%) scale(0.95);
+}
+
+/* Carousel Indicators */
+.carousel-indicators{
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.carousel-indicator{
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.carousel-indicator:hover{
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.2);
+}
+
+.carousel-indicator.active{
+    background: var(--white);
+    width: 30px;
+    border-radius: 6px;
+}
 
 .banner-card{
     position: relative;
@@ -503,17 +641,25 @@ input ~ .checked-radio-bg{
         inset: 0;
         opacity: 0;
         backdrop-filter: blur(5px);
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        transition: opacity 0.3s ease;
     }
 
         .movie-card:hover .card-overlay{ opacity: 1;}
     
-    .movie-card .bookmark, .movie-card .rating{
+    .movie-card .bookmark, .movie-card .card-rating-badge{
         position: absolute;
         top: 15px;
         padding: 6px;
         border-radius: 10px;
         color: var(--light-azure);
         transform: scale(var(--scale));
+        z-index: 2;
     }
 
         .movie-card .bookmark{
@@ -523,23 +669,70 @@ input ~ .checked-radio-bg{
 
             .movie-card .bookmark:hover{ color: var(--yellow);}
 
-        .movie-card .rating{
+        .movie-card .card-rating-badge{
             display: flex;
             align-items: center;
             right: 15px;
-            background: var(--oxford-blue-50);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 6px 10px;
         }
 
-            .movie-card .rating ion-icon{
+            .movie-card .card-rating-badge ion-icon{
                 color: var(--yellow);
+                font-size: 14px;
+                margin-right: 4px;
             }
 
-            .movie-card .rating span{
+            .movie-card .card-rating-badge span{
                 color: var(--white);
                 font-size: 13px;
                 font-weight: var(--fw5);
-                margin-left: 5px;
             }
+    
+    .movie-card .card-actions{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 80%;
+    }
+    
+    .movie-card .btn-watch-movie,
+    .movie-card .btn-watch-trailer{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: none;
+        font-size: var(--font-size-small);
+        font-weight: var(--fw6);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .movie-card .btn-watch-movie{
+        background: var(--light-azure);
+        color: var(--white);
+    }
+    
+    .movie-card .btn-watch-movie:hover{
+        background: var(--azure);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+    }
+    
+    .movie-card .btn-watch-trailer{
+        background: rgba(255, 255, 255, 0.2);
+        color: var(--white);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .movie-card .btn-watch-trailer:hover{
+        background: rgba(255, 255, 255, 0.3);
+        border-color: var(--white);
+    }
         
     .movie-card ion-icon{
         font-size: 16px;
@@ -547,19 +740,52 @@ input ~ .checked-radio-bg{
         --ionicon-stroke-width: 50px;
     }
 
-    .movie-card .play{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(var(--scale));
+            .movie-card:hover :is(.bookmark, .card-rating-badge){ --scale: 1;}
+    
+    .movie-card .studio-badge{
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(135deg, var(--light-azure), var(--azure));
+        color: var(--white);
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: var(--fw6);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
-
-        .movie-card .play ion-icon{
-            font-size: 60px;
-            --ionicon-stroke-width: 20px;
-        }
-
-            .movie-card:hover :is(.bookmark, .rating, .play){ --scale: 1;}
+    
+    .movie-card .card-ratings-mini{
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .movie-card .mini-rating{
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-weight: var(--fw5);
+    }
+    
+    .movie-card .mini-rating.imdb{
+        background: rgba(245, 197, 24, 0.2);
+        color: #f5c518;
+        border: 1px solid rgba(245, 197, 24, 0.3);
+    }
+    
+    .movie-card .mini-rating.rt.fresh{
+        background: rgba(0, 204, 0, 0.2);
+        color: #00cc00;
+        border: 1px solid rgba(0, 204, 0, 0.3);
+    }
+    
+    .movie-card .mini-rating.rt.rotten{
+        background: rgba(255, 0, 0, 0.2);
+        color: #ff0000;
+        border: 1px solid rgba(255, 0, 0, 0.3);
+    }
     
     .movie-card .card-title{
         font-size: var(--font-size-medium);
@@ -2180,6 +2406,84 @@ footer{
     margin: 0;
 }
 
+/* Ratings System */
+.movie-ratings{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--oxford-blue);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rating-item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rating-item:last-child{
+    border-bottom: none;
+}
+
+.rating-label{
+    font-size: var(--font-size-small);
+    font-weight: var(--fw5);
+    color: var(--off-white);
+}
+
+.rating-value{
+    font-size: var(--font-size-medium);
+    font-weight: var(--fw6);
+    color: var(--white);
+}
+
+.rating-value.fresh{
+    color: #00cc00;
+}
+
+.rating-value.rotten{
+    color: #ff0000;
+}
+
+.dezo-rating{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.dezo-stars{
+    display: flex;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.dezo-stars .star{
+    font-size: 20px;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.dezo-stars .star.interactive{
+    cursor: pointer;
+}
+
+.dezo-stars .star.interactive:hover{
+    transform: scale(1.2);
+}
+
+.dezo-stars .star.empty{
+    opacity: 0.3;
+}
+
+.modal-ratings-container{
+    margin: 20px 0;
+}
+
 .modal-actions{
     display: flex;
     gap: 15px;
@@ -2187,7 +2491,9 @@ footer{
 }
 
 .btn-play,
-.btn-watch{
+.btn-watch,
+.btn-watch-movie,
+.btn-watch-trailer{
     display: flex;
     align-items: center;
     gap: 10px;
@@ -2197,20 +2503,86 @@ footer{
     font-weight: var(--fw6);
     cursor: pointer;
     transition: all 0.3s ease;
+    border: none;
 }
 
-.btn-play{
+.btn-play,
+.btn-watch-movie{
     background: var(--light-azure);
     color: var(--white);
 }
 
-.btn-play:hover{
+.btn-play:hover,
+.btn-watch-movie:hover{
     background: var(--azure);
     transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
 }
 
-.btn-watch{
+.btn-watch,
+.btn-watch-trailer{
     background: var(--oxford-blue);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-watch:hover,
+.btn-watch-trailer:hover{
+    background: var(--rich-blank-fogra-29);
+    border-color: var(--light-azure);
+}
+
+/* Trailer Modal */
+.trailer-modal{
+    position: fixed;
+    inset: 0;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.trailer-modal-content{
+    position: relative;
+    background: var(--rich-blank-fogra-29);
+    border-radius: 20px;
+    max-width: 1200px;
+    width: 100%;
+    padding: 30px;
+    z-index: 1002;
+    animation: slideUp 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.trailer-title{
+    font-size: var(--font-size-large);
+    font-weight: var(--fw7);
+    color: var(--white);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.trailer-player{
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: 15px;
+    background: #000;
+}
+
+.trailer-player iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
     color: var(--white);
     border: 2px solid var(--light-azure);
 }
@@ -2275,12 +2647,20 @@ footer{
 
         header.active{ top: 250px;}
 
+    .navbar{
+        grid-template-columns: auto 1fr auto;
+        gap: 20px;
+    }
+    
+    .navbar-logo-container{
+        min-width: 100px;
+        max-width: 150px;
+    }
+    
     .navbar-menu-btn{
         display: block;
-        position: absolute;
-        top: 50%;
-        left: var(--padding-x);
-        transform: translateY(-50%);
+        position: relative;
+        order: -1;
     }
     
         .navbar-menu-btn span{
@@ -2288,7 +2668,8 @@ footer{
             background: var(--off-white);
             width: 25px;
             height: 2px;
-            margin: 8px;
+            margin: 8px 0;
+            transition: all 0.3s ease;
         }
             
             .navbar-menu-btn.active span{ background: var(--light-azure);}
@@ -2303,39 +2684,44 @@ footer{
                 transform: rotate(-45deg) translateY(-14px);
             }
 
-    .navbar-brand{ margin-left: 50px;}
-
-    nav{
+    .navbar-menu{
         position: fixed;
-        top: -250px;
+        top: -500px;
         left: 0;
         width: 100%;
+        background: var(--rich-blank-fogra-29);
         z-index: 100;
+        transition: top 0.3s ease;
+        border-bottom: 1px solid var(--oxford-blue);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
     }
 
-        nav.active {top: 0;}
+        .navbar-menu.active {
+            top: 100px;
+        }
 
     .navbar-nav{
-        height: auto;
-        max-height: 400px;
-        overflow-y: auto;
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
         padding: 20px var(--padding-x);
-        border-bottom: 1px solid var(--oxford-blue);
-        gap: 15px;
+        gap: 10px;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
     }
 
         .navbar-nav li{
             width: 100%;
-            margin-right: 0;
-            margin-bottom: 0;
         }
         
         .navbar-nav .navbar-link{
             width: 100%;
-            padding: 10px 0;
+            padding: 12px 0;
+            display: block;
+        }
+        
+        .navbar-nav .navbar-link.active::after{
+            display: none;
         }
     
     .navbar-form{
@@ -2425,6 +2811,44 @@ footer{
         font-size: 1.8em;
     }
     
+    .carousel-control-prev,
+    .carousel-control-next{
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .carousel-control-prev{
+        left: 10px;
+    }
+    
+    .carousel-control-next{
+        right: 10px;
+    }
+    
+    .carousel-indicators{
+        bottom: 10px;
+    }
+    
+    .carousel-indicator{
+        width: 8px;
+        height: 8px;
+    }
+    
+    .carousel-indicator.active{
+        width: 20px;
+    }
+    
+    .movie-card .card-actions{
+        width: 90%;
+    }
+    
+    .movie-card .btn-watch-movie,
+    .movie-card .btn-watch-trailer{
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+    
     .modal-body{
         grid-template-columns: 1fr;
         padding: 20px;
@@ -2444,9 +2868,29 @@ footer{
     }
     
     .btn-play,
-    .btn-watch{
+    .btn-watch,
+    .btn-watch-movie,
+    .btn-watch-trailer{
         width: 100%;
         justify-content: center;
+    }
+    
+    .movie-ratings{
+        padding: 15px;
+    }
+    
+    .rating-item{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .trailer-modal-content{
+        padding: 20px;
+    }
+    
+    .trailer-title{
+        font-size: 1.2em;
     }
     
     .modal-trailer iframe{

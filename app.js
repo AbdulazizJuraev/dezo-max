@@ -15,7 +15,10 @@ const genreFilter = document.querySelector('select[name="genre"]');
 const yearFilter = document.querySelector('select[name="year"]');
 const studioRadios = document.querySelectorAll('input[name="grade"]');
 const loadMoreBtn = document.querySelector('.load-more');
-const bannerCarousel = document.querySelector('.carousel-inner');
+const bannerCarousel = document.getElementById('bannerCarousel');
+const carouselIndicators = document.getElementById('carouselIndicators');
+const carouselPrev = document.getElementById('carouselPrev');
+const carouselNext = document.getElementById('carouselNext');
 
 // ==================== State Management ====================
 let currentMovies = [...moviesData];
@@ -29,8 +32,11 @@ let currentFilters = {
 
 // ==================== Navigation Functions ====================
 function navIsActive() {
+    const navbarMenu = document.querySelector('.navbar-menu');
     header.classList.toggle('active');
-    nav.classList.toggle('active');
+    if (navbarMenu) {
+        navbarMenu.classList.toggle('active');
+    }
     navbarMenuBtn.classList.toggle('active');
 }
 
@@ -41,57 +47,228 @@ function searchBarIsActive() {
     }
 }
 
+// ==================== Helper Functions ====================
+function getStudioName(studio) {
+    if (!i18n || !i18n.t) return studio;
+    const studioKey = `studios.${studio.toLowerCase().replace(/\s+/g, '')}`;
+    return i18n.t(studioKey) || studio;
+}
+
+// ==================== Ratings System ====================
+function renderRatings(movie, container, showInteractive = false) {
+    if (!movie.ratings) return;
+    
+    const ratings = movie.ratings;
+    const lang = i18n ? i18n.currentLanguage : 'en';
+    const imdbLabel = i18n && i18n.t ? i18n.t('ratings.imdb') : 'IMDb';
+    const rtLabel = i18n && i18n.t ? i18n.t('ratings.rottenTomatoes') : 'Rotten Tomatoes';
+    const dezoLabel = i18n && i18n.t ? i18n.t('ratings.dezo') : 'Dezo Rating';
+    
+    let ratingsHTML = `
+        <div class="movie-ratings">
+            <div class="rating-item imdb-rating">
+                <span class="rating-label">${imdbLabel}</span>
+                <span class="rating-value">${ratings.imdb.toFixed(1)}</span>
+            </div>
+            <div class="rating-item rt-rating">
+                <span class="rating-label">${rtLabel}</span>
+                <span class="rating-value ${ratings.rottenTomatoes >= 60 ? 'fresh' : 'rotten'}">${ratings.rottenTomatoes}%</span>
+            </div>
+            <div class="rating-item dezo-rating">
+                <span class="rating-label">${dezoLabel}</span>
+                <div class="dezo-stars" data-movie-id="${movie.id}">
+                    ${renderDezoStars(ratings.dezo, movie.id, showInteractive)}
+                </div>
+                <span class="rating-value">${ratings.dezo.toFixed(1)} / 10</span>
+            </div>
+        </div>
+    `;
+    
+    if (container) {
+        container.innerHTML = ratingsHTML;
+        
+        // Add interactive star rating if enabled
+        if (showInteractive) {
+            const starContainer = container.querySelector('.dezo-stars');
+            if (starContainer) {
+                starContainer.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('star')) {
+                        const rating = parseInt(e.target.dataset.rating);
+                        rateMovie(movie.id, rating);
+                        updateDezoStars(starContainer, rating);
+                    }
+                });
+            }
+        }
+    }
+    
+    return ratingsHTML;
+}
+
+function renderDezoStars(rating, movieId, interactive = false) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 10 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    let starsHTML = '';
+    let currentRating = 0;
+    
+    // Full stars
+    for (let i = 0; i < fullStars; i++) {
+        currentRating++;
+        starsHTML += `<span class="star ${interactive ? 'interactive' : ''}" data-rating="${currentRating}" data-movie-id="${movieId}">⭐</span>`;
+    }
+    
+    // Half star
+    if (hasHalfStar) {
+        currentRating++;
+        starsHTML += `<span class="star half ${interactive ? 'interactive' : ''}" data-rating="${currentRating}" data-movie-id="${movieId}">⭐</span>`;
+    }
+    
+    // Empty stars
+    for (let i = 0; i < emptyStars; i++) {
+        currentRating++;
+        starsHTML += `<span class="star empty ${interactive ? 'interactive' : ''}" data-rating="${currentRating}" data-movie-id="${movieId}">☆</span>`;
+    }
+    
+    return starsHTML;
+}
+
+function updateDezoStars(container, rating) {
+    const stars = container.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+        const starRating = index + 1;
+        if (starRating <= rating) {
+            star.classList.remove('empty');
+            star.textContent = '⭐';
+        } else {
+            star.classList.add('empty');
+            star.textContent = '☆';
+        }
+    });
+}
+
+function rateMovie(movieId, rating) {
+    // Get existing ratings from localStorage
+    let userRatings = JSON.parse(localStorage.getItem('dezoRatings') || '{}');
+    userRatings[movieId] = rating;
+    localStorage.setItem('dezoRatings', JSON.stringify(userRatings));
+    
+    // Calculate average rating
+    const movie = moviesData.find(m => m.id === movieId);
+    if (movie && movie.ratings) {
+        // In a real app, you'd calculate from all user ratings
+        // For now, we'll just update the display
+    }
+}
+
+function getAverageDezoRating(movieId) {
+    const userRatings = JSON.parse(localStorage.getItem('dezoRatings') || '{}');
+    const movie = moviesData.find(m => m.id === movieId);
+    if (!movie || !movie.ratings) return 0;
+    
+    const defaultRating = movie.ratings.dezo;
+    const userRating = userRatings[movieId];
+    
+    if (userRating) {
+        // Simple average (in production, calculate from all users)
+        return (defaultRating + userRating) / 2;
+    }
+    
+    return defaultRating;
+}
+
 // ==================== Movie Rendering ====================
 function createMovieCard(movie) {
     const card = document.createElement('div');
     card.className = 'movie-card';
     card.dataset.movieId = movie.id;
     
-    const genres = Array.isArray(movie.genre) ? movie.genre.join('/') : movie.genre;
+    const title = getMovieTitle(movie);
+    const genres = Array.isArray(movie.genre) ? movie.genre.map(g => {
+        const lang = i18n ? i18n.currentLanguage : 'en';
+        return i18n && i18n.t ? i18n.t(`genres.${g}`) : g;
+    }).join(' / ') : movie.genre;
     const isFav = typeof isFavorite === 'function' ? isFavorite('movies', movie.id) : false;
+    const studioName = getStudioName(movie.studio);
+    const watchMovieText = i18n && i18n.t ? i18n.t('movies.watchMovie') : 'Watch Movie';
+    const watchTrailerText = i18n && i18n.t ? i18n.t('movies.watchTrailer') : 'Watch Trailer';
+    
+    // Get ratings
+    const ratings = movie.ratings || {};
+    const imdbRating = ratings.imdb ? ratings.imdb.toFixed(1) : 'N/A';
     
     card.innerHTML = `
         <div class="card-head">
-            <img src="${movie.poster}" alt="${movie.title}" class="card-img" loading="lazy">
+            <img src="${movie.poster}" alt="${title}" class="card-img" loading="lazy">
             <div class="card-overlay">
                 <div class="bookmark ${isFav ? 'active' : ''}" data-movie-id="${movie.id}">
                     <ion-icon name="${isFav ? 'heart' : 'heart-outline'}"></ion-icon>
                 </div>
-                <div class="rating">
-                    <ion-icon name="star"></ion-icon>
-                    <span>${movie.rating}</span>
-                </div>
-                <div class="play" data-movie-id="${movie.id}">
-                    <ion-icon name="play-circle"></ion-icon>
+                <div class="card-actions">
+                    <button class="btn-watch-movie" data-movie-id="${movie.id}">
+                        <ion-icon name="play-circle"></ion-icon>
+                        <span>${watchMovieText}</span>
+                    </button>
+                    <button class="btn-watch-trailer" data-movie-id="${movie.id}">
+                        <ion-icon name="play"></ion-icon>
+                        <span>${watchTrailerText}</span>
+                    </button>
                 </div>
             </div>
+            ${ratings.imdb ? `
+                <div class="card-rating-badge">
+                    <ion-icon name="star"></ion-icon>
+                    <span>${imdbRating}</span>
+                </div>
+            ` : ''}
         </div>
         <div class="card-body">
-            <h3 class="card-title">${movie.title}</h3>
+            <div class="studio-badge">${studioName}</div>
+            <h3 class="card-title">${title}</h3>
             <div class="card-info">
                 <span class="genre">${genres}</span>
                 <span class="year">${movie.year}</span>
             </div>
+            ${ratings.imdb || ratings.rottenTomatoes || ratings.dezo ? `
+                <div class="card-ratings-mini">
+                    ${ratings.imdb ? `<span class="mini-rating imdb">IMDb ${imdbRating}</span>` : ''}
+                    ${ratings.rottenTomatoes ? `<span class="mini-rating rt ${ratings.rottenTomatoes >= 60 ? 'fresh' : 'rotten'}">RT ${ratings.rottenTomatoes}%</span>` : ''}
+                </div>
+            ` : ''}
         </div>
     `;
     
     // Add click handlers
-    const playBtn = card.querySelector('.play');
+    const watchMovieBtn = card.querySelector('.btn-watch-movie');
+    const watchTrailerBtn = card.querySelector('.btn-watch-trailer');
     const bookmarkBtn = card.querySelector('.bookmark');
     
-    playBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showMovieDetails(movie.id);
-    });
+    if (watchMovieBtn) {
+        watchMovieBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // In production, this would start the movie
+            showMovieDetails(movie.id);
+        });
+    }
     
-    bookmarkBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (typeof toggleMovieFavorite === 'function') {
-            toggleMovieFavorite(movie.id, bookmarkBtn);
-        } else {
-            toggleBookmark(movie.id, bookmarkBtn);
-        }
-    });
+    if (watchTrailerBtn) {
+        watchTrailerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showTrailer(movie.id);
+        });
+    }
+    
+    if (bookmarkBtn) {
+        bookmarkBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (typeof toggleMovieFavorite === 'function') {
+                toggleMovieFavorite(movie.id, bookmarkBtn);
+            } else {
+                toggleBookmark(movie.id, bookmarkBtn);
+            }
+        });
+    }
     
     card.addEventListener('click', () => showMovieDetails(movie.id));
     
@@ -150,11 +327,20 @@ function filterMovies() {
     // Search filter
     if (currentFilters.search) {
         const searchTerm = currentFilters.search.toLowerCase();
-        filtered = filtered.filter(movie => 
-            movie.title.toLowerCase().includes(searchTerm) ||
-            (movie.description && movie.description.toLowerCase().includes(searchTerm)) ||
-            (Array.isArray(movie.genre) && movie.genre.some(g => g.toLowerCase().includes(searchTerm)))
-        );
+        filtered = filtered.filter(movie => {
+            const title = getMovieTitle(movie).toLowerCase();
+            const description = getMovieDescription(movie).toLowerCase();
+            const genreMatch = Array.isArray(movie.genre) 
+                ? movie.genre.some(g => {
+                    const genreText = i18n && i18n.t ? i18n.t(`genres.${g}`) : g;
+                    return genreText.toLowerCase().includes(searchTerm);
+                })
+                : false;
+            
+            return title.includes(searchTerm) || 
+                   description.includes(searchTerm) || 
+                   genreMatch;
+        });
     }
     
     // Genre filter
@@ -215,6 +401,22 @@ function showMovieDetails(movieId) {
     const movie = moviesData.find(m => m.id === movieId);
     if (!movie) return;
     
+    const title = getMovieTitle(movie);
+    const description = getMovieDescription(movie);
+    const studioName = getStudioName(movie.studio);
+    const genres = Array.isArray(movie.genre) ? movie.genre.map(g => {
+        const lang = i18n ? i18n.currentLanguage : 'en';
+        const genreText = i18n && i18n.t ? i18n.t(`genres.${g}`) : g;
+        return `<span class="genre-tag">${genreText}</span>`;
+    }).join('') : `<span class="genre-tag">${movie.genre}</span>`;
+    
+    const castLabel = i18n && i18n.t ? i18n.t('movies.cast') : 'Cast';
+    const watchMovieText = i18n && i18n.t ? i18n.t('movies.watchMovie') : 'Watch Movie';
+    const watchTrailerText = i18n && i18n.t ? i18n.t('movies.watchTrailer') : 'Watch Trailer';
+    const releaseYearLabel = i18n && i18n.t ? i18n.t('movies.releaseYear') : 'Release Year';
+    const durationLabel = i18n && i18n.t ? i18n.t('movies.duration') : 'Duration';
+    const studioLabel = i18n && i18n.t ? i18n.t('movies.studio') : 'Studio';
+    
     // Create modal
     const modal = document.createElement('div');
     modal.className = 'movie-modal';
@@ -226,57 +428,54 @@ function showMovieDetails(movieId) {
             </button>
             <div class="modal-body">
                 <div class="modal-poster">
-                    <img src="${movie.poster}" alt="${movie.title}">
+                    <img src="${movie.poster}" alt="${title}">
                     <div class="modal-quality">${movie.quality}</div>
                 </div>
                 <div class="modal-info">
-                    <h1 class="modal-title">${movie.title}</h1>
+                    <h1 class="modal-title">${title}</h1>
                     <div class="modal-meta">
-                        <span class="modal-rating">
-                            <ion-icon name="star"></ion-icon>
-                            ${movie.rating}
-                        </span>
-                        <span class="modal-year">${movie.year}</span>
-                        <span class="modal-duration">${movie.duration}</span>
-                        <span class="modal-studio">${movie.studio}</span>
+                        <span class="modal-year"><strong>${releaseYearLabel}:</strong> ${movie.year}</span>
+                        <span class="modal-duration"><strong>${durationLabel}:</strong> ${movie.duration}</span>
+                        <span class="modal-studio"><strong>${studioLabel}:</strong> ${studioName}</span>
                     </div>
                     <div class="modal-genres">
-                        ${Array.isArray(movie.genre) ? movie.genre.map(g => `<span class="genre-tag">${g}</span>`).join('') : `<span class="genre-tag">${movie.genre}</span>`}
+                        ${genres}
                     </div>
-                    <p class="modal-description">${movie.description || 'No description available.'}</p>
+                    ${movie.ratings ? `
+                        <div class="modal-ratings-container"></div>
+                    ` : ''}
+                    <p class="modal-description">${description || (i18n && i18n.t ? i18n.t('movies.noDescription') : 'No description available.')}</p>
                     ${movie.cast ? `
                         <div class="modal-cast">
-                            <h3>${typeof i18n !== 'undefined' ? i18n.t('movies.cast') : 'Cast'}</h3>
+                            <h3>${castLabel}</h3>
                             <p>${movie.cast.join(', ')}</p>
                         </div>
                     ` : ''}
                     <div class="modal-actions">
-                        <button class="btn-play" data-movie-id="${movie.id}">
-                            <ion-icon name="play"></ion-icon>
-                            ${typeof i18n !== 'undefined' ? i18n.t('movies.playTrailer') : 'Play Trailer'}
-                        </button>
-                        <button class="btn-watch" data-movie-id="${movie.id}">
+                        <button class="btn-watch-movie" data-movie-id="${movie.id}">
                             <ion-icon name="play-circle"></ion-icon>
-                            ${typeof i18n !== 'undefined' ? i18n.t('movies.watchMovie') : 'Watch Movie'}
+                            ${watchMovieText}
+                        </button>
+                        <button class="btn-watch-trailer" data-movie-id="${movie.id}">
+                            <ion-icon name="play"></ion-icon>
+                            ${watchTrailerText}
                         </button>
                     </div>
                 </div>
             </div>
-            ${movie.trailer ? `
-                <div class="modal-trailer" id="trailer-${movie.id}">
-                    <iframe 
-                        src="${movie.trailer}" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            ` : ''}
         </div>
     `;
     
     document.body.appendChild(modal);
     document.body.style.overflow = 'hidden';
+    
+    // Render ratings
+    if (movie.ratings) {
+        const ratingsContainer = modal.querySelector('.modal-ratings-container');
+        if (ratingsContainer) {
+            renderRatings(movie, ratingsContainer, true);
+        }
+    }
     
     // Close modal handlers
     const closeBtn = modal.querySelector('.modal-close');
@@ -290,8 +489,76 @@ function showMovieDetails(movieId) {
     closeBtn.addEventListener('click', closeModal);
     overlay.addEventListener('click', closeModal);
     
-    // Play trailer
-    const playBtn = modal.querySelector('.btn-play');
+    // Watch movie button
+    const watchMovieBtn = modal.querySelector('.btn-watch-movie');
+    if (watchMovieBtn) {
+        watchMovieBtn.addEventListener('click', () => {
+            // In production, this would start the movie
+            closeModal();
+        });
+    }
+    
+    // Watch trailer button
+    const watchTrailerBtn = modal.querySelector('.btn-watch-trailer');
+    if (watchTrailerBtn) {
+        watchTrailerBtn.addEventListener('click', () => {
+            showTrailer(movie.id);
+        });
+    }
+}
+
+function showTrailer(movieId) {
+    const movie = moviesData.find(m => m.id === movieId);
+    if (!movie || !movie.trailer) return;
+    
+    const title = getMovieTitle(movie);
+    const trailerTitle = i18n && i18n.t ? i18n.t('trailer.title') : 'Trailer';
+    
+    const trailerModal = document.createElement('div');
+    trailerModal.className = 'trailer-modal';
+    trailerModal.innerHTML = `
+        <div class="modal-overlay"></div>
+        <div class="trailer-modal-content">
+            <button class="modal-close">
+                <ion-icon name="close"></ion-icon>
+            </button>
+            <h2 class="trailer-title">${trailerTitle}: ${title}</h2>
+            <div class="trailer-player">
+                <iframe 
+                    src="${movie.trailer}" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(trailerModal);
+    document.body.style.overflow = 'hidden';
+    
+    const closeBtn = trailerModal.querySelector('.modal-close');
+    const overlay = trailerModal.querySelector('.modal-overlay');
+    
+    const closeTrailer = () => {
+        document.body.removeChild(trailerModal);
+        document.body.style.overflow = '';
+    };
+    
+    closeBtn.addEventListener('click', closeTrailer);
+    overlay.addEventListener('click', closeTrailer);
+    
+    // Stop video when modal closes
+    const iframe = trailerModal.querySelector('iframe');
+    if (iframe) {
+        const originalSrc = iframe.src;
+        closeBtn.addEventListener('click', () => {
+            iframe.src = '';
+            setTimeout(() => {
+                iframe.src = originalSrc;
+            }, 100);
+        });
+    }
     if (playBtn) {
         playBtn.addEventListener('click', () => {
             const trailer = modal.querySelector('.modal-trailer');
@@ -394,51 +661,86 @@ function loadBookmarks() {
 }
 
 // ==================== Banner Carousel ====================
+let currentSlide = 0;
+let carouselInterval = null;
+let isPaused = false;
+
+function getMovieTitle(movie) {
+    if (typeof movie.title === 'object' && movie.title !== null) {
+        const lang = i18n ? i18n.currentLanguage : 'en';
+        return movie.title[lang] || movie.title.en || movie.title.uz || Object.values(movie.title)[0];
+    }
+    return movie.title;
+}
+
+function getMovieDescription(movie) {
+    if (typeof movie.description === 'object' && movie.description !== null) {
+        const lang = i18n ? i18n.currentLanguage : 'en';
+        return movie.description[lang] || movie.description.en || movie.description.uz || Object.values(movie.description)[0];
+    }
+    return movie.description || '';
+}
+
+function getGenreText(genre) {
+    if (Array.isArray(genre)) {
+        return genre.map(g => {
+            const lang = i18n ? i18n.currentLanguage : 'en';
+            return i18n && i18n.t ? i18n.t(`genres.${g}`) : g;
+        }).join(' / ');
+    }
+    const lang = i18n ? i18n.currentLanguage : 'en';
+    return i18n && i18n.t ? i18n.t(`genres.${genre}`) : genre;
+}
+
 function renderBanner() {
-    if (!bannerCarousel) return;
+    if (!bannerCarousel || !bannerMovies || bannerMovies.length === 0) return;
     
     // Update carousel indicators
-    const indicators = document.querySelector('.carousel-indicators');
-    if (indicators) {
-        indicators.innerHTML = bannerMovies.map((_, index) => `
+    if (carouselIndicators) {
+        carouselIndicators.innerHTML = bannerMovies.map((_, index) => `
             <button type="button" 
-                    data-bs-target="#carouselExampleIndicators" 
-                    data-bs-slide-to="${index}" 
-                    ${index === 0 ? 'class="active" aria-current="true"' : ''} 
+                    class="carousel-indicator ${index === 0 ? 'active' : ''}" 
+                    data-slide="${index}"
                     aria-label="Slide ${index + 1}">
             </button>
         `).join('');
     }
     
-    bannerCarousel.innerHTML = bannerMovies.map((movie, index) => `
-        <div class="carousel-item ${index === 0 ? 'active' : ''}">
-            <section class="banner">
-                <div class="banner-card" data-movie-id="${movie.id}">
-                    <img src="${movie.poster}" alt="${movie.title}" class="banner-img">
-                    <div class="card-content">
-                        <div class="card-info">
-                            <div class="genre4">
-                                <ion-icon name="film"></ion-icon>
-                                <span class="asos">${movie.genre}</span>
+    // Render carousel items
+    bannerCarousel.innerHTML = bannerMovies.map((movie, index) => {
+        const title = getMovieTitle(movie);
+        const genre = getGenreText(movie.genre);
+        
+        return `
+            <div class="carousel-item ${index === 0 ? 'active' : ''}" data-slide="${index}">
+                <section class="banner">
+                    <div class="banner-card" data-movie-id="${movie.id}">
+                        <img src="${movie.poster}" alt="${title}" class="banner-img">
+                        <div class="card-content">
+                            <div class="card-info">
+                                <div class="genre4">
+                                    <ion-icon name="film"></ion-icon>
+                                    <span class="asos">${genre}</span>
+                                </div>
+                                <div class="genre4">
+                                    <ion-icon name="calendar"></ion-icon>
+                                    <span class="asos">${movie.year}</span>
+                                </div>
+                                <div class="genre4">
+                                    <ion-icon name="time"></ion-icon>
+                                    <span class="asos">${movie.duration}</span>
+                                </div>
+                                <div class="quality">${movie.quality}</div>
                             </div>
-                            <div class="genre4">
-                                <ion-icon name="calendar"></ion-icon>
-                                <span class="asos">${movie.year}</span>
-                            </div>
-                            <div class="genre4">
-                                <ion-icon name="time"></ion-icon>
-                                <span class="asos">${movie.duration}</span>
-                            </div>
-                            <div class="quality">${movie.quality}</div>
+                            <h2 class="card-title">${title}</h2>
                         </div>
-                        <h2 class="card-title">${movie.title}</h2>
                     </div>
-                </div>
-            </section>
-        </div>
-    `).join('');
+                </section>
+            </div>
+        `;
+    }).join('');
     
-    // Add click handlers to banner cards after a short delay to ensure DOM is ready
+    // Add click handlers to banner cards
     setTimeout(() => {
         document.querySelectorAll('.banner-card').forEach(card => {
             card.style.cursor = 'pointer';
@@ -448,6 +750,101 @@ function renderBanner() {
             });
         });
     }, 100);
+    
+    // Initialize carousel controls
+    initCarouselControls();
+    startCarousel();
+}
+
+function initCarouselControls() {
+    if (carouselPrev) {
+        carouselPrev.addEventListener('click', () => {
+            goToSlide(currentSlide - 1);
+            resetCarousel();
+        });
+    }
+    
+    if (carouselNext) {
+        carouselNext.addEventListener('click', () => {
+            goToSlide(currentSlide + 1);
+            resetCarousel();
+        });
+    }
+    
+    // Indicator clicks
+    if (carouselIndicators) {
+        carouselIndicators.querySelectorAll('.carousel-indicator').forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                goToSlide(index);
+                resetCarousel();
+            });
+        });
+    }
+    
+    // Pause on hover
+    if (bannerCarousel) {
+        const container = bannerCarousel.closest('.banner-carousel-container');
+        if (container) {
+            container.addEventListener('mouseenter', () => {
+                isPaused = true;
+                stopCarousel();
+            });
+            container.addEventListener('mouseleave', () => {
+                isPaused = false;
+                startCarousel();
+            });
+        }
+    }
+}
+
+function goToSlide(index) {
+    if (!bannerCarousel) return;
+    
+    const items = bannerCarousel.querySelectorAll('.carousel-item');
+    if (items.length === 0) return;
+    
+    // Handle wrap-around
+    if (index < 0) {
+        index = items.length - 1;
+    } else if (index >= items.length) {
+        index = 0;
+    }
+    
+    // Update active states
+    items.forEach((item, i) => {
+        item.classList.toggle('active', i === index);
+    });
+    
+    if (carouselIndicators) {
+        const indicators = carouselIndicators.querySelectorAll('.carousel-indicator');
+        indicators.forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === index);
+        });
+    }
+    
+    currentSlide = index;
+}
+
+function startCarousel() {
+    if (isPaused || !bannerCarousel) return;
+    stopCarousel();
+    carouselInterval = setInterval(() => {
+        goToSlide(currentSlide + 1);
+    }, 5000);
+}
+
+function stopCarousel() {
+    if (carouselInterval) {
+        clearInterval(carouselInterval);
+        carouselInterval = null;
+    }
+}
+
+function resetCarousel() {
+    stopCarousel();
+    if (!isPaused) {
+        startCarousel();
+    }
 }
 
 // ==================== Event Listeners ====================
@@ -560,6 +957,14 @@ function init() {
     renderMovies(currentMovies);
     loadBookmarks();
     
+    // Re-render banner on language change
+    if (typeof i18n !== 'undefined' && i18n.onLanguageChange) {
+        i18n.onLanguageChange(() => {
+            renderBanner();
+            filterAndRenderMovies();
+        });
+    }
+    
     // Initialize authentication
     initAuth();
     
@@ -569,17 +974,7 @@ function init() {
         router.handleRoute();
     }
     
-    // Initialize Bootstrap carousel if available
-    if (typeof bootstrap !== 'undefined') {
-        const carouselElement = document.querySelector('#carouselExampleIndicators');
-        if (carouselElement) {
-            const carousel = new bootstrap.Carousel(carouselElement, {
-                interval: 5000,
-                wrap: true,
-                pause: 'hover'
-            });
-        }
-    }
+    // Carousel is initialized in renderBanner()
     
     // Listen for language changes to re-translate
     window.addEventListener('languageChanged', () => {

@@ -83,12 +83,46 @@ const translations = {
             noMoviesDesc: "Filtrlarni yoki qidiruv so'zlarini o'zgartiring",
             playTrailer: "Treylerni ko'rish",
             watchMovie: "Filmini ko'rish",
+            watchTrailer: "Treylerni ko'rish",
             cast: "Aktyorlar",
             rating: "Reyting",
             year: "Yil",
+            releaseYear: "Chiqarilgan yil",
             duration: "Davomiyligi",
             studio: "Studiya",
-            quality: "Sifat"
+            quality: "Sifat",
+            description: "Tavsif",
+            noDescription: "Tavsif mavjud emas"
+        },
+        
+        // Ratings
+        ratings: {
+            imdb: "IMDb",
+            rottenTomatoes: "Rotten Tomatoes",
+            dezo: "Dezo Rating",
+            rateMovie: "Filmini baholash",
+            yourRating: "Sizning bahoingiz",
+            averageRating: "O'rtacha baho"
+        },
+        
+        // Studios
+        studios: {
+            marvel: "Marvel",
+            dc: "DC",
+            paramountpictures: "Paramount Pictures",
+            disney: "Disney",
+            netflix: "Netflix",
+            "20thcenturyfox": "20th Century Fox",
+            warnerbros: "Warner Bros",
+            columbiapictures: "Columbia Pictures",
+            sony: "Sony",
+            universal: "Universal",
+            "newlinecinema": "New Line Cinema"
+        },
+        
+        // Trailer
+        trailer: {
+            title: "Treyler"
         },
         
         // Categories
@@ -316,12 +350,46 @@ const translations = {
             noMoviesDesc: "Попробуйте изменить фильтры или поисковые запросы",
             playTrailer: "Смотреть трейлер",
             watchMovie: "Смотреть фильм",
+            watchTrailer: "Смотреть трейлер",
             cast: "В ролях",
             rating: "Рейтинг",
             year: "Год",
+            releaseYear: "Год выпуска",
             duration: "Длительность",
             studio: "Студия",
-            quality: "Качество"
+            quality: "Качество",
+            description: "Описание",
+            noDescription: "Описание недоступно"
+        },
+        
+        // Ratings
+        ratings: {
+            imdb: "IMDb",
+            rottenTomatoes: "Rotten Tomatoes",
+            dezo: "Dezo Rating",
+            rateMovie: "Оценить фильм",
+            yourRating: "Ваша оценка",
+            averageRating: "Средняя оценка"
+        },
+        
+        // Studios
+        studios: {
+            marvel: "Marvel",
+            dc: "DC",
+            paramountpictures: "Paramount Pictures",
+            disney: "Disney",
+            netflix: "Netflix",
+            "20thcenturyfox": "20th Century Fox",
+            warnerbros: "Warner Bros",
+            columbiapictures: "Columbia Pictures",
+            sony: "Sony",
+            universal: "Universal",
+            "newlinecinema": "New Line Cinema"
+        },
+        
+        // Trailer
+        trailer: {
+            title: "Трейлер"
         },
         
         // Categories
@@ -549,12 +617,46 @@ const translations = {
             noMoviesDesc: "Try adjusting your filters or search terms",
             playTrailer: "Play Trailer",
             watchMovie: "Watch Movie",
+            watchTrailer: "Watch Trailer",
             cast: "Cast",
             rating: "Rating",
             year: "Year",
+            releaseYear: "Release Year",
             duration: "Duration",
             studio: "Studio",
-            quality: "Quality"
+            quality: "Quality",
+            description: "Description",
+            noDescription: "No description available"
+        },
+        
+        // Ratings
+        ratings: {
+            imdb: "IMDb",
+            rottenTomatoes: "Rotten Tomatoes",
+            dezo: "Dezo Rating",
+            rateMovie: "Rate Movie",
+            yourRating: "Your Rating",
+            averageRating: "Average Rating"
+        },
+        
+        // Studios
+        studios: {
+            marvel: "Marvel",
+            dc: "DC",
+            paramountpictures: "Paramount Pictures",
+            disney: "Disney",
+            netflix: "Netflix",
+            "20thcenturyfox": "20th Century Fox",
+            warnerbros: "Warner Bros",
+            columbiapictures: "Columbia Pictures",
+            sony: "Sony",
+            universal: "Universal",
+            "newlinecinema": "New Line Cinema"
+        },
+        
+        // Trailer
+        trailer: {
+            title: "Trailer"
         },
         
         // Categories
