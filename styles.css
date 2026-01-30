@@ -347,9 +347,10 @@ header, nav {
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out;
     transform: translateX(100%);
     pointer-events: none;
+    z-index: 1;
 }
 
 .carousel-item.active{
@@ -362,6 +363,13 @@ header, nav {
 .carousel-item.prev{
     transform: translateX(-100%);
     z-index: 1;
+    opacity: 0;
+}
+
+.carousel-item.next{
+    transform: translateX(100%);
+    z-index: 1;
+    opacity: 0;
 }
 
 /* Carousel Controls */
@@ -2658,9 +2666,19 @@ footer{
     }
     
     .navbar-menu-btn{
-        display: block;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         position: relative;
         order: -1;
+        width: 40px;
+        height: 40px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        z-index: 1001;
+        padding: 0;
     }
     
         .navbar-menu-btn span{
@@ -2684,29 +2702,73 @@ footer{
                 transform: rotate(-45deg) translateY(-14px);
             }
 
-    .navbar-menu{
-        position: fixed;
-        top: -500px;
-        left: 0;
-        width: 100%;
-        background: var(--rich-blank-fogra-29);
-        z-index: 100;
-        transition: top 0.3s ease;
-        border-bottom: 1px solid var(--oxford-blue);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-    }
+.navbar-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(3px);
+    z-index: 999;
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
 
-        .navbar-menu.active {
-            top: 100px;
-        }
+.navbar-menu{
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 350px;
+    height: 100vh;
+    background: var(--rich-blank-fogra-29);
+    z-index: 1000;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-right: 1px solid var(--oxford-blue);
+    box-shadow: 5px 0 30px rgba(0, 0, 0, 0.7);
+    overflow-y: auto;
+    padding-top: 80px;
+}
+
+    .navbar-menu.active {
+        left: 0;
+    }
+    
+    .navbar-menu-close{
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--oxford-blue);
+        border: none;
+        border-radius: 50%;
+        color: var(--white);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+    
+    .navbar-menu-close:hover{
+        background: var(--light-azure);
+        transform: rotate(90deg);
+    }
+    
+    .navbar-menu-close ion-icon{
+        font-size: 24px;
+    }
 
     .navbar-nav{
         flex-direction: column;
         justify-content: flex-start;
-        align-items: flex-start;
-        padding: 20px var(--padding-x);
-        gap: 10px;
-        max-height: calc(100vh - 100px);
+        align-items: stretch;
+        padding: 20px;
+        gap: 5px;
+        height: auto;
         overflow-y: auto;
     }
 
@@ -2716,8 +2778,21 @@ footer{
         
         .navbar-nav .navbar-link{
             width: 100%;
-            padding: 12px 0;
+            padding: 15px 20px;
             display: block;
+            border-radius: 8px;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-nav .navbar-link:hover{
+            background: var(--oxford-blue);
+            padding-left: 25px;
+        }
+        
+        .navbar-nav .navbar-link.active{
+            background: var(--light-azure);
+            color: var(--white);
         }
         
         .navbar-nav .navbar-link.active::after{
@@ -2849,6 +2924,20 @@ footer{
         font-size: 12px;
     }
     
+    .navbar-menu{
+        width: 85%;
+        max-width: 300px;
+    }
+    
+    .navbar-menu-close{
+        width: 35px;
+        height: 35px;
+    }
+    
+    .navbar-menu-close ion-icon{
+        font-size: 20px;
+    }
+    
     .modal-body{
         grid-template-columns: 1fr;
         padding: 20px;
@@ -2955,6 +3044,41 @@ footer{
     
     .movie-card .card-head{
         height: 200px;
+    }
+    
+        .card-img{
+        object-fit: cover;
+        background: var(--oxford-blue);
+    }
+    
+    .banner-img{
+        object-fit: cover;
+        background: var(--oxford-blue);
+    }
+    
+    .modal-poster img{
+        object-fit: cover;
+        background: var(--oxford-blue);
+    }
+    
+    /* Image loading states */
+    .card-img[src=""],
+    .card-img:not([src]),
+    .banner-img[src=""],
+    .banner-img:not([src]){
+        background: linear-gradient(135deg, var(--oxford-blue) 0%, var(--rich-blank-fogra-29) 100%);
+    }
+    
+    .card-img::before,
+    .banner-img::before{
+        content: '📽️';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3em;
+        opacity: 0.3;
+        pointer-events: none;
     }
     
     .auth-modal-content{

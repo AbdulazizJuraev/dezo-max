@@ -31,14 +31,63 @@ let currentFilters = {
 };
 
 // ==================== Navigation Functions ====================
+function closeNavMenu() {
+    const navbarMenu = document.querySelector('.navbar-menu');
+    const overlay = document.querySelector('.navbar-overlay');
+    
+    if (navbarMenu) {
+        navbarMenu.classList.remove('active');
+        navbarMenuBtn.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+}
+
 function navIsActive() {
     const navbarMenu = document.querySelector('.navbar-menu');
-    header.classList.toggle('active');
+    
     if (navbarMenu) {
-        navbarMenu.classList.toggle('active');
+        const isActive = navbarMenu.classList.toggle('active');
+        navbarMenuBtn.classList.toggle('active', isActive);
+        document.body.style.overflow = isActive ? 'hidden' : '';
+        
+        // Create or remove overlay
+        let overlay = document.querySelector('.navbar-overlay');
+        if (isActive) {
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'navbar-overlay';
+                document.body.appendChild(overlay);
+            }
+            overlay.style.display = 'block';
+            
+            // Close menu when clicking overlay
+            const closeMenu = () => {
+                closeNavMenu();
+                overlay.removeEventListener('click', closeMenu);
+            };
+            
+            setTimeout(() => {
+                overlay.addEventListener('click', closeMenu);
+            }, 100);
+        } else {
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }
     }
-    navbarMenuBtn.classList.toggle('active');
 }
+
+// Close menu button handler
+document.addEventListener('DOMContentLoaded', () => {
+    const closeBtn = document.querySelector('.navbar-menu-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeNavMenu);
+    }
+});
 
 function searchBarIsActive() {
     navbarForm.classList.toggle('active');
@@ -52,6 +101,32 @@ function getStudioName(studio) {
     if (!i18n || !i18n.t) return studio;
     const studioKey = `studios.${studio.toLowerCase().replace(/\s+/g, '')}`;
     return i18n.t(studioKey) || studio;
+}
+
+// ==================== Image Fallback System ====================
+const FALLBACK_POSTER = 'https://via.placeholder.com/300x450/1a1a2e/ffffff?text=No+Poster';
+const FALLBACK_BANNER = 'https://via.placeholder.com/1920x1080/1a1a2e/ffffff?text=Movie+Banner';
+
+function handleImageError(img, fallback = FALLBACK_POSTER) {
+    if (img.src !== fallback) {
+        img.src = fallback;
+        img.onerror = null; // Prevent infinite loop
+    }
+}
+
+function setupImageFallback(img, originalSrc, fallback = FALLBACK_POSTER) {
+    img.onerror = () => handleImageError(img, fallback);
+    img.src = originalSrc;
+    
+    // Also check if image loads successfully
+    img.onload = () => {
+        // Image loaded successfully
+    };
+}
+
+function getMoviePoster(movie) {
+    // Return the poster URL, or fallback if missing
+    return movie.poster || FALLBACK_POSTER;
 }
 
 // ==================== Ratings System ====================
@@ -198,9 +273,11 @@ function createMovieCard(movie) {
     const ratings = movie.ratings || {};
     const imdbRating = ratings.imdb ? ratings.imdb.toFixed(1) : 'N/A';
     
+    const posterUrl = getMoviePoster(movie);
+    
     card.innerHTML = `
         <div class="card-head">
-            <img src="${movie.poster}" alt="${title}" class="card-img" loading="lazy">
+            <img src="${posterUrl}" alt="${title}" class="card-img" loading="lazy" data-poster="${posterUrl}">
             <div class="card-overlay">
                 <div class="bookmark ${isFav ? 'active' : ''}" data-movie-id="${movie.id}">
                     <ion-icon name="${isFav ? 'heart' : 'heart-outline'}"></ion-icon>
@@ -271,6 +348,12 @@ function createMovieCard(movie) {
     }
     
     card.addEventListener('click', () => showMovieDetails(movie.id));
+    
+    // Setup image fallback
+    const cardImg = card.querySelector('.card-img');
+    if (cardImg) {
+        setupImageFallback(cardImg, posterUrl, FALLBACK_POSTER);
+    }
     
     return card;
 }
@@ -417,6 +500,8 @@ function showMovieDetails(movieId) {
     const durationLabel = i18n && i18n.t ? i18n.t('movies.duration') : 'Duration';
     const studioLabel = i18n && i18n.t ? i18n.t('movies.studio') : 'Studio';
     
+    const modalPoster = getMoviePoster(movie);
+    
     // Create modal
     const modal = document.createElement('div');
     modal.className = 'movie-modal';
@@ -428,7 +513,7 @@ function showMovieDetails(movieId) {
             </button>
             <div class="modal-body">
                 <div class="modal-poster">
-                    <img src="${movie.poster}" alt="${title}">
+                    <img src="${modalPoster}" alt="${title}" data-poster="${modalPoster}">
                     <div class="modal-quality">${movie.quality}</div>
                 </div>
                 <div class="modal-info">
@@ -475,6 +560,12 @@ function showMovieDetails(movieId) {
         if (ratingsContainer) {
             renderRatings(movie, ratingsContainer, true);
         }
+    }
+    
+    // Setup image fallback for modal poster
+    const modalImg = modal.querySelector('.modal-poster img');
+    if (modalImg) {
+        setupImageFallback(modalImg, modalPoster, FALLBACK_POSTER);
     }
     
     // Close modal handlers
@@ -711,11 +802,13 @@ function renderBanner() {
         const title = getMovieTitle(movie);
         const genre = getGenreText(movie.genre);
         
+        const bannerPoster = getMoviePoster(movie);
+        
         return `
             <div class="carousel-item ${index === 0 ? 'active' : ''}" data-slide="${index}">
                 <section class="banner">
                     <div class="banner-card" data-movie-id="${movie.id}">
-                        <img src="${movie.poster}" alt="${title}" class="banner-img">
+                        <img src="${bannerPoster}" alt="${title}" class="banner-img" data-poster="${bannerPoster}">
                         <div class="card-content">
                             <div class="card-info">
                                 <div class="genre4">
@@ -740,7 +833,7 @@ function renderBanner() {
         `;
     }).join('');
     
-    // Add click handlers to banner cards
+    // Add click handlers to banner cards and setup image fallbacks
     setTimeout(() => {
         document.querySelectorAll('.banner-card').forEach(card => {
             card.style.cursor = 'pointer';
@@ -748,6 +841,12 @@ function renderBanner() {
                 const movieId = parseInt(card.dataset.movieId);
                 showMovieDetails(movieId);
             });
+            
+            // Setup image fallback for banner images
+            const bannerImg = card.querySelector('.banner-img');
+            if (bannerImg) {
+                setupImageFallback(bannerImg, bannerImg.dataset.poster || bannerImg.src, FALLBACK_BANNER);
+            }
         });
     }, 100);
     
@@ -795,6 +894,50 @@ function initCarouselControls() {
             });
         }
     }
+    
+    // Touch/swipe support for mobile
+    addSwipeSupport();
+}
+
+function addSwipeSupport() {
+    if (!bannerCarousel) return;
+    
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let isSwiping = false;
+    
+    bannerCarousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        isSwiping = true;
+    }, { passive: true });
+    
+    bannerCarousel.addEventListener('touchmove', (e) => {
+        if (isSwiping) {
+            touchEndX = e.changedTouches[0].screenX;
+        }
+    }, { passive: true });
+    
+    bannerCarousel.addEventListener('touchend', (e) => {
+        if (!isSwiping) return;
+        
+        const swipeDistance = touchStartX - touchEndX;
+        const minSwipeDistance = 50; // Minimum distance for swipe
+        
+        if (Math.abs(swipeDistance) > minSwipeDistance) {
+            if (swipeDistance > 0) {
+                // Swipe left - go to next slide
+                goToSlide(currentSlide + 1);
+            } else {
+                // Swipe right - go to previous slide
+                goToSlide(currentSlide - 1);
+            }
+            resetCarousel();
+        }
+        
+        isSwiping = false;
+        touchStartX = 0;
+        touchEndX = 0;
+    }, { passive: true });
 }
 
 function goToSlide(index) {
@@ -803,6 +946,8 @@ function goToSlide(index) {
     const items = bannerCarousel.querySelectorAll('.carousel-item');
     if (items.length === 0) return;
     
+    const prevIndex = currentSlide;
+    
     // Handle wrap-around
     if (index < 0) {
         index = items.length - 1;
@@ -810,9 +955,25 @@ function goToSlide(index) {
         index = 0;
     }
     
-    // Update active states
+    // Update classes for slide animation (left to right)
     items.forEach((item, i) => {
-        item.classList.toggle('active', i === index);
+        item.classList.remove('active', 'prev', 'next');
+        
+        if (i === index) {
+            item.classList.add('active');
+        } else if (i === prevIndex) {
+            // Previous slide
+            if (index > prevIndex || (prevIndex === items.length - 1 && index === 0)) {
+                item.classList.add('prev');
+            } else {
+                item.classList.add('next');
+            }
+        } else if (i < prevIndex && i > index) {
+            // Slides between prev and current
+            item.classList.add('next');
+        } else if (i > prevIndex && i < index) {
+            item.classList.add('prev');
+        }
     });
     
     if (carouselIndicators) {
