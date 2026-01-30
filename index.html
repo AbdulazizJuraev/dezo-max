@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DezoMax</title>
+    <link rel="stylesheet" href="img/logo/dezo max.png">
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+    <div class="container">
+        <header class="">
+            <div class="navbar">
+                <button class="navbar-menu-btn">
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                </button>
+
+                <a href="#" class="navbar-brand">
+                    <img src="img/logo/dezo max.png" alt="logo">
+                </a>
+
+                <nav class="">
+                    <ul class="navbar-nav">
+                        <li><a href="#" class="navbar-link" data-route="home" data-i18n="nav.home">Asosiy</a></li>
+                        <li><a href="#" class="navbar-link" data-route="tv" data-i18n="nav.tv">TV</a></li>
+                        <li><a href="#" class="navbar-link" data-route="movies" data-i18n="nav.movies">Filmlar</a></li>
+                        <li><a href="#" class="navbar-link" data-route="series" data-i18n="nav.series">Seriallar</a></li>
+                        <li><a href="#" class="navbar-link" data-route="cartoons" data-i18n="nav.cartoons">Multfilmlar</a></li>
+                        <li><a href="#" class="navbar-link" data-route="anime" data-i18n="nav.anime">Anime</a></li>
+                        <li><a href="#" class="navbar-link indicator" data-route="live" data-i18n="nav.live">Jonli efir</a></li>
+                        <li><a href="#" class="navbar-link" data-route="pricing" data-i18n="nav.pricing">Narxlar</a></li>
+                        <li><a href="#" class="navbar-link" data-route="favorites" data-i18n="nav.favorites">Sevimlilar</a></li>
+                    </ul>
+                </nav>
+
+                <div class="navbar-actions">
+                    <form action="#" class="navbar-form">
+                        <input type="text" name="search" data-i18n="search.placeholder" placeholder="Film izlash..." class="navbar-form-search">
+
+                        <button class="navbar-form-btn">
+                            <ion-icon name="search"></ion-icon>
+                        </button>
+    
+                        <button class="navbar-form-close">
+                            <ion-icon name="close-circle-outline"></ion-icon>
+                        </button>
+                    </form>
+
+                    <button class="navbar-search-btn">
+                        <ion-icon name="search"></ion-icon>
+                    </button>
+
+                    <a href="#" class="navbar-signin" id="loginBtn">
+                        <span data-i18n="auth.login">Kirish</span>
+                        <ion-icon name="log-in"></ion-icon>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Auth Modals -->
+        <div class="auth-modal" id="authModal">
+            <div class="modal-overlay"></div>
+            <div class="auth-modal-content">
+                <button class="auth-modal-close">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+                
+                <!-- Login Form -->
+                <div class="auth-form" id="loginForm">
+                    <h2 data-i18n="auth.loginTitle">Kirish</h2>
+                    <p class="auth-subtitle" data-i18n="auth.loginSubtitle">Hisobingizga kiring</p>
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label data-i18n="auth.email">Email</label>
+                            <input type="email" name="email" data-i18n="auth.emailPlaceholder" placeholder="email@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="auth.password">Parol</label>
+                            <input type="password" name="password" data-i18n="auth.passwordPlaceholder" placeholder="Parolingizni kiriting" required>
+                        </div>
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="remember">
+                                <span data-i18n="auth.remember">Eslab qolish</span>
+                            </label>
+                            <a href="#" class="forgot-password" data-i18n="auth.forgotPassword">Parolni unutdingizmi?</a>
+                        </div>
+                        <button type="submit" class="auth-btn primary" data-i18n="auth.login">Kirish</button>
+                        <p class="auth-switch">
+                            <span data-i18n="auth.noAccount">Hisobingiz yo'qmi?</span>
+                            <a href="#" id="showSignup" data-i18n="auth.signup">Ro'yxatdan o'tish</a>
+                        </p>
+                    </form>
+                </div>
+
+                <!-- Signup Form -->
+                <div class="auth-form" id="signupForm" style="display: none;">
+                    <h2 data-i18n="auth.signupTitle">Ro'yxatdan o'tish</h2>
+                    <p class="auth-subtitle" data-i18n="auth.signupSubtitle">Yangi hisob yarating</p>
+                    <form id="signupFormElement">
+                        <div class="form-group">
+                            <label data-i18n="auth.name">Ism</label>
+                            <input type="text" name="name" data-i18n="auth.namePlaceholder" placeholder="Ismingiz" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="auth.email">Email</label>
+                            <input type="email" name="email" data-i18n="auth.emailPlaceholder" placeholder="email@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="auth.password">Parol</label>
+                            <input type="password" name="password" data-i18n="auth.passwordMinPlaceholder" placeholder="Kamida 6 belgi" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="auth.confirmPassword">Parolni tasdiqlash</label>
+                            <input type="password" name="confirmPassword" data-i18n="auth.confirmPasswordPlaceholder" placeholder="Parolni qayta kiriting" required>
+                        </div>
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="terms" required>
+                                <span data-i18n-html="auth.terms">Men <a href="#">shartlar</a> va <a href="#">maxfiylik siyosati</a>ga roziman</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="auth-btn primary" data-i18n="auth.signup">Ro'yxatdan o'tish</button>
+                        <p class="auth-switch">
+                            <span data-i18n="auth.haveAccount">Allaqachon hisobingiz bormi?</span>
+                            <a href="#" id="showLogin" data-i18n="auth.login">Kirish</a>
+                        </p>
+                    </form>
+                </div>
+
+                <!-- User Menu (shown when logged in) -->
+                <div class="user-menu-content" id="userMenu" style="display: none;">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <ion-icon name="person-circle"></ion-icon>
+                        </div>
+                        <div class="user-details">
+                            <h3 id="userName">User Name</h3>
+                            <p class="user-plan" id="userPlan">Basic Plan</p>
+                        </div>
+                    </div>
+                    <div class="user-menu-actions">
+                        <a href="#" class="menu-item" id="upgradeBtn">
+                            <ion-icon name="star"></ion-icon>
+                            <span data-i18n="userMenu.upgrade">Premium ga o'tish</span>
+                        </a>
+                        <a href="#" class="menu-item">
+                            <ion-icon name="bookmark"></ion-icon>
+                            <span data-i18n="userMenu.bookmarks">Saqlanganlar</span>
+                        </a>
+                        <a href="#" class="menu-item" id="settingsBtn">
+                            <ion-icon name="settings"></ion-icon>
+                            <span data-i18n="userMenu.settings">Sozlamalar</span>
+                        </a>
+                        <a href="#" class="menu-item" id="logoutBtn">
+                            <ion-icon name="log-out"></ion-icon>
+                            <span data-i18n="userMenu.logout">Chiqish</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div class="toast" id="toast">
+            <span id="toastMessage"></span>
+        </div>
+
+        <!-- Language Settings Modal -->
+        <div class="language-modal" id="languageModal">
+            <div class="modal-overlay"></div>
+            <div class="language-modal-content">
+                <button class="language-modal-close">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+                <div class="language-modal-body">
+                    <h2 data-i18n="language.title">Til Sozlamalari</h2>
+                    <p class="language-subtitle" data-i18n="language.subtitle">Veb-sayt tilini tanlang</p>
+                    
+                    <div class="language-options">
+                        <div class="language-option" data-lang="uz">
+                            <div class="language-flag">🇺🇿</div>
+                            <div class="language-info">
+                                <h3>O'zbek</h3>
+                                <p>Uzbek</p>
+                            </div>
+                            <div class="language-check">
+                                <ion-icon name="checkmark-circle" class="check-icon"></ion-icon>
+                            </div>
+                        </div>
+                        
+                        <div class="language-option" data-lang="ru">
+                            <div class="language-flag">RUS</div>
+                            <div class="language-info">
+                                <h3>Русский</h3>
+                                <p>Russian</p>
+                            </div>
+                            <div class="language-check">
+                                <ion-icon name="checkmark-circle" class="check-icon"></ion-icon>
+                            </div>
+                        </div>
+                        
+                        <div class="language-option" data-lang="en">
+                            <div class="language-flag">ENG</div>
+                            <div class="language-info">
+                                <h3>English</h3>
+                                <p>English</p>
+                            </div>
+                            <div class="language-check">
+                                <ion-icon name="checkmark-circle" class="check-icon"></ion-icon>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="language-modal-actions">
+                        <button class="language-btn cancel" id="languageCancel" data-i18n="language.cancel">Bekor qilish</button>
+                        <button class="language-btn save" id="languageSave" data-i18n="language.save">Saqlash</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+<div id="carouselExampleIndicators" class="carousel slide">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+     
+ <section class="banner">
+                <div class="banner-card">
+                    <img src="img/poster.jpg" alt="banner" class="banner-img">
+
+
+
+                    <div class="card-content">
+                        <div class="card-info">
+                            <div class="genre4">
+                                <ion-icon name="film"></ion-icon>
+                                <span class="asos">Fantastik Tortlik</span>
+                            </div>
+
+                            <div class="genre4">
+                                <ion-icon name="calendar"></ion-icon>
+                                <span class="asos">2025</span>
+                            </div>
+
+                            <div class="genre4">
+                                <ion-icon name="time"></ion-icon>
+                                <span class="asos">2h 11min</span>
+                            </div>
+
+                            <div class="quality">4k</div>
+                        </div>
+                        <h2 class="card-title">Birinch boshlanish</h2>
+                    </div>
+                </div>
+
+            </section>
+
+    </div>
+    <div class="carousel-item">
+    
+<section class="banner">
+                <div class="banner-card">
+                    <img src="img/20653dad1856cd6aae435b229976d1c6.jpg" alt="banner" class="banner-img">
+
+
+
+                    <div class="card-content">
+                        <div class="card-info">
+                            <div class="genre4">
+                                <ion-icon  name="film"></ion-icon>
+                                <span class="asos">Marver</span>
+                            </div>
+
+                            <div class="genre4">
+                                <ion-icon name="calendar"></ion-icon>
+                                <span class="asos">2025</span>
+                            </div>
+
+                            <div class="genre4">
+                                <ion-icon name="time"></ion-icon>
+                                <span class="asos">2h 11min</span>
+                            </div>
+
+                            <div class="quality">4k</div>
+                        </div>
+                        <h2 class="card-title">Yangi Qasoskorlar</h2>
+                    </div>
+                </div>
+
+            </section>
+
+    </div>
+    <div class="carousel-item">
+      
+<section class="banner">
+                <div class="banner-card">
+                    <img src="img/poster.jpg" alt="banner" class="banner-img">
+
+
+
+                    <div class="card-content">
+                        <div class="card-info">
+                            <div class="genre4">
+                                <ion-icon name="film"></ion-icon>
+                                <span class="asos">Fantastik Tortlik</span>
+                            </div>
+
+                            <div class="genre4">
+                                <ion-icon name="calendar"></ion-icon>
+                                <span class="asos">2025</span>
+                            </div>
+
+                            <div class="genre4">
+                                <ion-icon name="time"></ion-icon>
+                                <span class="asos">2h 11min</span>
+                            </div>
+
+                            <div class="quality">4k</div>
+                        </div>
+                        <h2 class="card-title">Birinch boshlanish</h2>
+                    </div>
+                </div>
+
+            </section>
+
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden"></span>
+  </button>
+</div>
+
+
+        <main>
+            <!-- Home Section -->
+            <div id="home-section" class="page-section active">
+                <div class="home-content">
+                    <section class="movies">
+                        <div class="filter-bar">
+                    <div class="filter-dropdowns">
+                        <select name="genre" class="genre2" data-i18n-option="filters.allGenres,filters.action,filters.adventure,filters.comedy,filters.animation,filters.biography,filters.drama,filters.fantasy,filters.horror,filters.scifi,filters.war">
+                            <option value="all genres" data-i18n="filters.allGenres">Barcha Janrlar</option>
+                            <option value="action" data-i18n="filters.action">Jangari</option>
+                            <option value="adventure" data-i18n="filters.adventure">Sarguzasht</option>
+                            <option value="comedy" data-i18n="filters.comedy">Komediya</option>
+                            <option value="animation" data-i18n="filters.animation">Animatsiya</option>
+                            <option value="biography" data-i18n="filters.biography">Hayotiy</option>
+                            <option value="drama" data-i18n="filters.drama">Drama</option>
+                            <option value="fantasy" data-i18n="filters.fantasy">Fantastik</option>
+                            <option value="horror" data-i18n="filters.horror">Qorqinchili</option>
+                            <option value="scifi" data-i18n="filters.scifi">Ilmiy-fantastik</option>
+                            <option value="war" data-i18n="filters.war">Urush</option>
+                        </select>
+
+                        <select name="year" class="year">
+                            <option value="all years" data-i18n="filters.allYears">Barcha Yillar</option>
+                            <option value="2024">2024</option>
+                            <option value="2020-2023">2020-2023</option>
+                            <option value="2010-2019">2010-2019</option>
+                            <option value="2000-2009">2000-2009</option>
+                            <option value="1980-1999">1980-1999</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-radios">
+                        <input type="radio" name="grade" id="featured" checked>
+                        <label for="featured">Marvel</label>
+
+                        <input type="radio" name="grade" id="popular">
+                        <label for="popular">DC</label>
+
+                        <input type="radio" name="grade" id="newest">
+                        <label for="newest">Disney</label>
+
+                        <div class="checked-radio-bg"></div>
+                    </div>
+                </div>
+
+                        <div class="movies-grid">
+                            <!-- Movies will be dynamically rendered here -->
+                        </div>
+
+                        <button class="load-more" data-i18n="movies.loadMore">LOAD MORE</button>
+                    </section>
+
+                    <section class="category" id="category">
+                <h2 class="section-heading" data-i18n="categories.title">Category</h2>
+
+                <div class="category-grid">
+                    <div class="category-card">
+                        <img src="https://i.postimg.cc/JzfWFmfC/action.jpg" alt="image" class="card-img">
+                        <div class="name">Action</div>
+                        <div class="total">100</div>
+                    </div>
+
+                    <div class="category-card">
+                        <img src="https://i.postimg.cc/CKpxqjL8/comedy.jpg" alt="image" class="card-img">
+                        <div class="name">Comedy</div>
+                        <div class="total">50</div>
+                    </div>
+
+                    <div class="category-card">
+                        <img src="https://i.postimg.cc/3rfrBMxY/thriller.webp" alt="image" class="card-img">
+                        <div class="name">Thriller</div>
+                        <div class="total">20</div>
+                    </div>
+
+                    <div class="category-card">
+                        <img src="https://i.postimg.cc/HkXpdV4k/horror.jpg" alt="image" class="card-img">
+                        <div class="name">Horror</div>
+                        <div class="total">80</div>
+                    </div>
+
+                    <div class="category-card">
+                        <img src="https://i.postimg.cc/qRRVhRnn/adventure.jpg" alt="image" class="card-img">
+                        <div class="name">Adventure</div>
+                        <div class="total">100</div>
+                    </div>
+
+                    <div class="category-card">
+                        <img src="https://i.postimg.cc/15pmZ8K5/animated.jpg" alt="image" class="card-img">
+                        <div class="name">Animation</div>
+                        <div class="total">50</div>
+                    </div>
+
+                    <div class="category-card">
+                        <img src="https://i.postimg.cc/XvX6Xq95/crime.jpg" alt="image" class="card-img">
+                        <div class="name">Crime</div>
+                        <div class="total">20</div>
+                    </div>
+
+                    <div class="category-card">
+                        <img src="https://i.postimg.cc/8568BYKP/sci-fi.jpg" alt="image" class="card-img">
+                        <div class="name">Sci-fi</div>
+                        <div class="total">80</div>
+                    </div>
+                    </div>
+                    </section>
+                </div>
+            </div>
+                <h2 class="section-heading" data-i18n="live.title">Live TV Shows</h2>
+
+                <div class="live-grid">
+                    <div class="live-card">
+                        <div class="card-head">
+                            <img src="https://i.postimg.cc/m26wBrZJ/planet.jpg" alt="image" class="card-img">
+                            <div class="live-badge">LIVE</div>
+                            <div class="total-viewers">305K viewers</div>
+                            <div class="play">
+                                <ion-icon name="play-circle-outline"></ion-icon>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <img src="https://i.postimg.cc/YCzQjqtt/bbcamerica.jpg" alt="image" class="avatar">
+                            <h3 class="card-title">Planet Earth II <br> Season 1 - Islands</h3>
+                        </div>
+                    </div>
+
+                    <div class="live-card">
+                        <div class="card-head">
+                            <img src="https://i.postimg.cc/PrY8CrdP/got.jpg" alt="image" class="card-img">
+                            <div class="live-badge">LIVE</div>
+                            <div class="total-viewers">1.7M viewers</div>
+                            <div class="play">
+                                <ion-icon name="play-circle-outline"></ion-icon>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <img src="https://i.postimg.cc/ryWpJn3H/HBO-Logo-square.jpg" alt="image" class="avatar">
+                            <h3 class="card-title">Game of Thrones <br> Season 5 - Mother's Mercy</h3>
+                        </div>
+                    </div>
+
+                    <div class="live-card">
+                        <div class="card-head">
+                            <img src="https://i.postimg.cc/RVLZr3MQ/vikins.jpg" alt="image" class="card-img">
+                            <div class="live-badge">LIVE</div>
+                            <div class="total-viewers">468K viewers</div>
+                            <div class="play">
+                                <ion-icon name="play-circle-outline"></ion-icon>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <img src="https://i.postimg.cc/ryWpJn3H/HBO-Logo-square.jpg" alt="image" class="avatar">
+                            <h3 class="card-title">Vikings <br> Season 4 - What Might Have Been</h3>
+                        </div>
+                    </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- TV Section -->
+            <div id="tv-section" class="page-section">
+                <div class="tv-content">
+                    <h2 class="section-heading" data-i18n="tv.title">TV Kanallar</h2>
+                    <div class="tv-channels-grid" id="tvChannelsGrid">
+                        <!-- TV channels will be dynamically rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Movies Section -->
+            <div id="movies-section" class="page-section">
+                <div class="movies-content">
+                    <section class="movies">
+                        <div class="filter-bar">
+                            <div class="filter-dropdowns">
+                                <select name="genre" class="genre2">
+                                    <option value="all genres" data-i18n="filters.allGenres">Barcha Janrlar</option>
+                                    <option value="action" data-i18n="filters.action">Jangari</option>
+                                    <option value="adventure" data-i18n="filters.adventure">Sarguzasht</option>
+                                    <option value="comedy" data-i18n="filters.comedy">Komediya</option>
+                                    <option value="animation" data-i18n="filters.animation">Animatsiya</option>
+                                    <option value="biography" data-i18n="filters.biography">Hayotiy</option>
+                                    <option value="drama" data-i18n="filters.drama">Drama</option>
+                                    <option value="fantasy" data-i18n="filters.fantasy">Fantastik</option>
+                                    <option value="horror" data-i18n="filters.horror">Qorqinchili</option>
+                                    <option value="scifi" data-i18n="filters.scifi">Ilmiy-fantastik</option>
+                                    <option value="war" data-i18n="filters.war">Urush</option>
+                                </select>
+                                <select name="year" class="year">
+                                    <option value="all years" data-i18n="filters.allYears">Barcha Yillar</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2020-2023">2020-2023</option>
+                                    <option value="2010-2019">2010-2019</option>
+                                    <option value="2000-2009">2000-2009</option>
+                                    <option value="1980-1999">1980-1999</option>
+                                </select>
+                            </div>
+                            <div class="filter-radios">
+                                <input type="radio" name="grade" id="featured-movies" checked>
+                                <label for="featured-movies">Marvel</label>
+                                <input type="radio" name="grade" id="popular-movies">
+                                <label for="popular-movies">DC</label>
+                                <input type="radio" name="grade" id="newest-movies">
+                                <label for="newest-movies">Disney</label>
+                                <div class="checked-radio-bg"></div>
+                            </div>
+                        </div>
+                        <div class="movies-grid" id="moviesPageGrid">
+                            <!-- Movies will be dynamically rendered here -->
+                        </div>
+                        <button class="load-more" data-i18n="movies.loadMore">LOAD MORE</button>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Series Section -->
+            <div id="series-section" class="page-section">
+                <div class="series-content">
+                    <h2 class="section-heading" data-i18n="series.title">Seriallar</h2>
+                    <div class="empty-state">
+                        <h3 data-i18n="series.noSeries">Seriallar topilmadi</h3>
+                        <p data-i18n="series.noSeriesDesc">Hozircha seriallar mavjud emas</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cartoons Section -->
+            <div id="cartoons-section" class="page-section">
+                <div class="cartoons-content">
+                    <h2 class="section-heading" data-i18n="cartoons.title">Multfilmlar</h2>
+                    <div class="empty-state">
+                        <h3 data-i18n="cartoons.noCartoons">Multfilmlar topilmadi</h3>
+                        <p data-i18n="cartoons.noCartoonsDesc">Hozircha multfilmlar mavjud emas</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Anime Section -->
+            <div id="anime-section" class="page-section">
+                <div class="anime-content">
+                    <h2 class="section-heading" data-i18n="anime.title">Anime</h2>
+                    <div class="empty-state">
+                        <h3 data-i18n="anime.noAnime">Anime topilmadi</h3>
+                        <p data-i18n="anime.noAnimeDesc">Hozircha anime mavjud emas</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Section -->
+            <div id="live-section" class="page-section">
+                <div class="live-content">
+                    <h2 class="section-heading" data-i18n="live.title">Jonli TV Dasturlar</h2>
+                    <div class="live-grid">
+                        <div class="live-card">
+                            <div class="card-head">
+                                <img src="https://i.postimg.cc/m26wBrZJ/planet.jpg" alt="image" class="card-img">
+                                <div class="live-badge">LIVE</div>
+                                <div class="total-viewers">305K viewers</div>
+                                <div class="play">
+                                    <ion-icon name="play-circle-outline"></ion-icon>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <img src="https://i.postimg.cc/YCzQjqtt/bbcamerica.jpg" alt="image" class="avatar">
+                                <h3 class="card-title">Planet Earth II <br> Season 1 - Islands</h3>
+                            </div>
+                        </div>
+                        <div class="live-card">
+                            <div class="card-head">
+                                <img src="https://i.postimg.cc/PrY8CrdP/got.jpg" alt="image" class="card-img">
+                                <div class="live-badge">LIVE</div>
+                                <div class="total-viewers">1.7M viewers</div>
+                                <div class="play">
+                                    <ion-icon name="play-circle-outline"></ion-icon>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <img src="https://i.postimg.cc/ryWpJn3H/HBO-Logo-square.jpg" alt="image" class="avatar">
+                                <h3 class="card-title">Game of Thrones <br> Season 5 - Mother's Mercy</h3>
+                            </div>
+                        </div>
+                        <div class="live-card">
+                            <div class="card-head">
+                                <img src="https://i.postimg.cc/RVLZr3MQ/vikins.jpg" alt="image" class="card-img">
+                                <div class="live-badge">LIVE</div>
+                                <div class="total-viewers">468K viewers</div>
+                                <div class="play">
+                                    <ion-icon name="play-circle-outline"></ion-icon>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <img src="https://i.postimg.cc/ryWpJn3H/HBO-Logo-square.jpg" alt="image" class="avatar">
+                                <h3 class="card-title">Vikings <br> Season 4 - What Might Have Been</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Section -->
+            <div id="pricing-section" class="page-section">
+                <div class="pricing-content">
+                    <h2 class="section-heading" data-i18n="pricing.title">Narxlar</h2>
+                    <p class="pricing-subtitle" data-i18n="pricing.subtitle">O'zingizga mos tarifni tanlang</p>
+                    <div class="pricing-grid">
+                        <div class="pricing-card">
+                            <h3 data-i18n="pricing.basic">Basic</h3>
+                            <div class="pricing-price">
+                                <span class="price">$9.99</span>
+                                <span class="period" data-i18n="pricing.monthly">oyiga</span>
+                            </div>
+                            <ul class="pricing-features">
+                                <li data-i18n="pricing.unlimited">Cheksiz filmlar va seriallar</li>
+                                <li data-i18n="pricing.hdQuality">HD va 4K sifat</li>
+                                <li>1 qurilma</li>
+                            </ul>
+                            <button class="pricing-btn" data-i18n="pricing.selectPlan">Tarifni tanlash</button>
+                        </div>
+                        <div class="pricing-card premium">
+                            <div class="premium-badge" data-i18n="pricing.premium">Premium</div>
+                            <h3 data-i18n="pricing.premium">Premium</h3>
+                            <div class="pricing-price">
+                                <span class="price">$19.99</span>
+                                <span class="period" data-i18n="pricing.monthly">oyiga</span>
+                            </div>
+                            <ul class="pricing-features">
+                                <li data-i18n="pricing.unlimited">Cheksiz filmlar va seriallar</li>
+                                <li data-i18n="pricing.hdQuality">HD va 4K sifat</li>
+                                <li data-i18n="pricing.noAds">Reklamalarsiz</li>
+                                <li data-i18n="pricing.multipleDevices">Bir nechta qurilma</li>
+                                <li data-i18n="pricing.download">Yuklab olish</li>
+                            </ul>
+                            <button class="pricing-btn premium-btn" data-i18n="pricing.selectPlan">Tarifni tanlash</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favorites Section -->
+            <div id="favorites-section" class="page-section">
+                <div class="favorites-content">
+                    <h2 class="section-heading" data-i18n="favorites.title">Sevimlilar</h2>
+                    <div class="favorites-tabs">
+                        <button class="favorites-tab active" data-type="all" data-i18n="favorites.title">Barchasi</button>
+                        <button class="favorites-tab" data-type="movies" data-i18n="favorites.movies">Filmlar</button>
+                        <button class="favorites-tab" data-type="series" data-i18n="favorites.series">Seriallar</button>
+                        <button class="favorites-tab" data-type="tv" data-i18n="favorites.tvChannels">TV Kanallar</button>
+                    </div>
+                    <div class="favorites-grid" id="favoritesGrid">
+                        <!-- Favorites will be dynamically rendered here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="https://i.postimg.cc/KvjKVZXj/logo.png" alt="image" class="footer-logo">
+                    <p class="slogan">Movies & TV Shows, Online Cinema, Movie Database HTML Template</p>
+
+                    <div class="social-link">
+                        <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
+                        <a href="#"><ion-icon name="logo-twitter"></ion-icon></a>
+                        <a href="#"><ion-icon name="logo-instagram"></ion-icon></a>
+                        <a href="#"><ion-icon name="logo-tiktok"></ion-icon></a>
+                        <a href="#"><ion-icon name="logo-youtube"></ion-icon></a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <ul>
+                        <h4 class="link-heading">CineFlix</h4>
+    
+                        <li class="link-item"><a href="#">About us</a></li>
+                        <li class="link-item"><a href="#">My profile</a></li>
+                        <li class="link-item"><a href="#">Pricing plans</a></li>
+                        <li class="link-item"><a href="#">Contacts</a></li>
+                    </ul>
+    
+                    <ul>
+                        <h4 class="link-heading">Browse</h4>
+    
+                        <li class="link-item"><a href="#">Live TV</a></li>
+                        <li class="link-item"><a href="#">Live News</a></li>
+                        <li class="link-item"><a href="#">Live Sports</a></li>
+                        <li class="link-item"><a href="#">Streaming Library</a></li>
+                    </ul>
+    
+                    <ul>
+    
+                        <li class="link-item"><a href="#">TV Shows</a></li>
+                        <li class="link-item"><a href="#">Movies</a></li>
+                        <li class="link-item"><a href="#">Kids</a></li>
+                        <li class="link-item"><a href="#">Collections</a></li>
+                    </ul>
+    
+                    <ul>
+                        <h4 class="link-heading">Help</h4>
+    
+                        <li class="link-item"><a href="#">Qo'llab quvatlash xizmati</a></li>
+                        <li class="link-item"><a href="#">Tariflar va Xafvsizlik</a></li>
+                        <li class="link-item"><a href="#">Bu servis haqida</a></li>
+                        <li class="link-item"><a href="#">Erisha olish</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-copyright">
+                <div class="copyright">
+                    <p>© Copyright 2025 Dezo Max</p>
+                </div>
+
+                <div class="wrapper">
+                    <a href="#">Privacy policy</a>
+                    <a href="#">Terms and conditions</a>
+                </div>
+            </div>
+
+        </footer>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- TV Player Modal -->
+    <div class="tv-player-modal" id="tvPlayerModal">
+        <div class="modal-overlay"></div>
+        <div class="tv-player-content">
+            <button class="tv-player-close">
+                <ion-icon name="close"></ion-icon>
+            </button>
+            <div class="tv-player-body">
+                <div class="tv-player-header">
+                    <img id="tvPlayerLogo" src="" alt="Channel Logo" class="tv-channel-logo">
+                    <div class="tv-player-info">
+                        <h3 id="tvPlayerName"></h3>
+                        <span class="tv-live-badge" data-i18n="tv.live">Jonli</span>
+                    </div>
+                </div>
+                <div class="tv-player-video">
+                    <iframe id="tvPlayerFrame" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="translations.js"></script>
+    <script src="i18n.js"></script>
+    <script src="router.js"></script>
+    <script src="tv-channels.js"></script>
+    <script src="pages.js"></script>
+    <script src="movies.js"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
