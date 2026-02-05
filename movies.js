@@ -179,7 +179,7 @@ const moviesData = [
         quality: "4K",
         poster: "https://i.postimg.cc/hjjBqk6r/panther.jpg",
         studio: "Marvel",
-        trailer: "https://www.youtube.com/embed/xjDjIWPwcPU",
+        trailer: "https://s11.faylmovi.ru/tarjima_kinolar/Qora_pantera_1080.mp4",
         cast: ["Chadwick Boseman", "Michael B. Jordan", "Lupita Nyong'o"],
         ratings: {
             imdb: 7.3,
