@@ -21,7 +21,19 @@ const carouselPrev = document.getElementById('carouselPrev');
 const carouselNext = document.getElementById('carouselNext');
 
 // ==================== State Management ====================
-let currentMovies = [...moviesData];
+/**
+ * Get the current movies data source (TMDB or static)
+ * @returns {Array} Array of movies
+ */
+function getMoviesData() {
+    // Use allMoviesData if available (from TMDB), otherwise fall back to moviesData
+    if (typeof allMoviesData !== 'undefined' && allMoviesData.length > 0) {
+        return allMoviesData;
+    }
+    return moviesData;
+}
+
+let currentMovies = [...getMoviesData()];
 let displayedCount = 12;
 let currentFilters = {
     genre: 'all genres',
@@ -81,12 +93,27 @@ function navIsActive() {
     }
 }
 
-// Close menu button handler
+// Close menu button handler and link click handler
 document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.querySelector('.navbar-menu-close');
     if (closeBtn) {
-        closeBtn.addEventListener('click', closeNavMenu);
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeNavMenu();
+        });
     }
+    
+    // Close menu when clicking on navigation links (mobile)
+    const navLinks = document.querySelectorAll('.navbar-nav .navbar-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            // Small delay to allow route navigation first
+            setTimeout(() => {
+                closeNavMenu();
+            }, 100);
+        });
+    });
 });
 
 function searchBarIsActive() {
@@ -230,7 +257,7 @@ function rateMovie(movieId, rating) {
     localStorage.setItem('dezoRatings', JSON.stringify(userRatings));
     
     // Calculate average rating
-    const movie = moviesData.find(m => m.id === movieId);
+    const movie = getMoviesData().find(m => m.id === movieId);
     if (movie && movie.ratings) {
         // In a real app, you'd calculate from all user ratings
         // For now, we'll just update the display
@@ -239,7 +266,7 @@ function rateMovie(movieId, rating) {
 
 function getAverageDezoRating(movieId) {
     const userRatings = JSON.parse(localStorage.getItem('dezoRatings') || '{}');
-    const movie = moviesData.find(m => m.id === movieId);
+    const movie = getMoviesData().find(m => m.id === movieId);
     if (!movie || !movie.ratings) return 0;
     
     const defaultRating = movie.ratings.dezo;
@@ -405,7 +432,12 @@ function loadMoreMovies() {
 
 // ==================== Filter Functions ====================
 function filterMovies() {
-    let filtered = [...moviesData];
+    let filtered = [...getMoviesData()];
+    
+    // Filter for Marvel and DC movies only
+    filtered = filtered.filter(movie => 
+        movie.studio === 'Marvel' || movie.studio === 'DC'
+    );
     
     // Search filter
     if (currentFilters.search) {
@@ -481,7 +513,7 @@ function handleSearch(e) {
 
 // ==================== Movie Details Modal ====================
 function showMovieDetails(movieId) {
-    const movie = moviesData.find(m => m.id === movieId);
+    const movie = getMoviesData().find(m => m.id === movieId);
     if (!movie) return;
     
     const title = getMovieTitle(movie);
@@ -599,7 +631,7 @@ function showMovieDetails(movieId) {
 }
 
 function showTrailer(movieId) {
-    const movie = moviesData.find(m => m.id === movieId);
+    const movie = getMoviesData().find(m => m.id === movieId);
     if (!movie || !movie.trailer) return;
     
     const title = getMovieTitle(movie);
@@ -784,11 +816,16 @@ function getGenreText(genre) {
 }
 
 function renderBanner() {
-    if (!bannerCarousel || !bannerMovies || bannerMovies.length === 0) return;
+    // Get current banner movies (may be updated from TMDB)
+    const currentBannerMovies = typeof getBannerMovies === 'function' 
+        ? getBannerMovies() 
+        : bannerMovies;
+    
+    if (!bannerCarousel || !currentBannerMovies || currentBannerMovies.length === 0) return;
     
     // Update carousel indicators
     if (carouselIndicators) {
-        carouselIndicators.innerHTML = bannerMovies.map((_, index) => `
+        carouselIndicators.innerHTML = currentBannerMovies.map((_, index) => `
             <button type="button" 
                     class="carousel-indicator ${index === 0 ? 'active' : ''}" 
                     data-slide="${index}"
@@ -798,7 +835,7 @@ function renderBanner() {
     }
     
     // Render carousel items
-    bannerCarousel.innerHTML = bannerMovies.map((movie, index) => {
+    bannerCarousel.innerHTML = currentBannerMovies.map((movie, index) => {
         const title = getMovieTitle(movie);
         const genre = getGenreText(movie.genre);
         
@@ -1014,8 +1051,14 @@ navbarSearchBtn.addEventListener('click', searchBarIsActive);
 navbarFormCloseBtn.addEventListener('click', searchBarIsActive);
 navbarForm.addEventListener('submit', handleSearch);
 navbarFormSearch.addEventListener('input', (e) => {
-    currentFilters.search = e.target.value.trim();
+    const searchValue = e.target.value.trim();
+    currentFilters.search = searchValue;
+    
+    // Filter and render movies in real-time
     filterAndRenderMovies();
+    
+    // Also update the displayed count
+    displayedCount = 12;
 });
 
 genreFilter.addEventListener('change', (e) => {
@@ -1112,11 +1155,57 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
+// ==================== Navbar Scroll Effect ====================
+function initNavbarScrollEffect() {
+    if (!header) return;
+    
+    let ticking = false;
+    
+    function updateNavbar() {
+        const scrollY = window.scrollY;
+        
+        if (scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+        
+        ticking = false;
+    }
+    
+    function onScroll() {
+        if (!ticking) {
+            window.requestAnimationFrame(updateNavbar);
+            ticking = true;
+        }
+    }
+    
+    window.addEventListener('scroll', onScroll, { passive: true });
+    
+    // Initial check
+    updateNavbar();
+}
+
 // ==================== Initialize ====================
 function init() {
+    // Initialize navbar scroll effect
+    initNavbarScrollEffect();
+    
+    // Refresh movies data in case TMDB loaded
+    currentMovies = [...getMoviesData()];
+    
     renderBanner();
     renderMovies(currentMovies);
     loadBookmarks();
+    
+    // Re-render when TMDB movies are loaded
+    if (typeof loadMoviesFromTMDB === 'function') {
+        // Wait a bit for TMDB to load, then refresh
+        setTimeout(() => {
+            currentMovies = [...getMoviesData()];
+            filterAndRenderMovies();
+        }, 2000);
+    }
     
     // Re-render banner on language change
     if (typeof i18n !== 'undefined' && i18n.onLanguageChange) {

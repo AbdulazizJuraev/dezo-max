@@ -112,8 +112,95 @@ a{
     }
 
 header, nav { 
-    background: var(--rich-blank-fogra-29);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    background: rgba(26, 30, 40, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+/* Additional glass overlay for depth */
+header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.03) 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.05) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Liquid Glass Animated Gradient Background */
+header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(33, 150, 243, 0.18) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(156, 39, 176, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(0, 188, 212, 0.14) 0%, transparent 50%),
+        radial-gradient(circle at 60% 60%, rgba(255, 87, 34, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 10% 90%, rgba(76, 175, 80, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 90% 10%, rgba(255, 193, 7, 0.1) 0%, transparent 50%);
+    background-size: 300% 300%;
+    animation: liquidFlow 25s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.7;
+    filter: blur(40px);
+}
+
+@keyframes liquidFlow {
+    0% {
+        background-position: 0% 50%, 100% 50%, 50% 0%, 50% 100%, 0% 100%, 100% 0%;
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        background-position: 100% 30%, 0% 70%, 0% 100%, 100% 0%, 50% 50%, 50% 50%;
+        transform: translate(-2%, 2%) rotate(1deg);
+    }
+    50% {
+        background-position: 50% 100%, 50% 0%, 100% 50%, 0% 50%, 100% 0%, 0% 100%;
+        transform: translate(2%, -2%) rotate(-1deg);
+    }
+    75% {
+        background-position: 50% 0%, 50% 100%, 0% 50%, 100% 50%, 50% 0%, 50% 100%;
+        transform: translate(-1%, 1%) rotate(0.5deg);
+    }
+    100% {
+        background-position: 0% 50%, 100% 50%, 50% 0%, 50% 100%, 0% 100%, 100% 0%;
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+/* Scrolled state - more opaque */
+header.scrolled {
+    background: rgba(26, 30, 40, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 
+                0 4px 12px rgba(0, 0, 0, 0.2);
+    border: none;
+}
+
+header.scrolled::before {
+    opacity: 0.5;
+    filter: blur(50px);
 }
 
 
@@ -154,6 +241,7 @@ header, nav {
     gap: 30px;
     position: relative;
     padding: 0 var(--padding-x);
+    z-index: 2;
 }
 
 .navbar-menu-btn{ 
@@ -195,6 +283,10 @@ header, nav {
     overflow: hidden;
     display: flex;
     justify-content: center;
+}
+
+.navbar-menu-close{
+    display: none;
 }
 
 .navbar-nav{ 
@@ -303,6 +395,10 @@ header, nav {
     transition: all 0.3s ease;
 }
 
+    .navbar-signin span {
+        display: inline;
+    }
+
     .navbar-signin ion-icon{
         font-size: 22px;
         color: var(--light-azure);
@@ -319,6 +415,24 @@ header, nav {
     .navbar-signin:hover span,
     .navbar-signin:hover ion-icon{
         color: var(--white);
+    }
+    
+    /* Hide text on mobile, show only icon */
+    @media screen and (max-width: 1200px) {
+        .navbar-signin span {
+            display: none;
+        }
+        
+        .navbar-signin {
+            padding: 8px 12px;
+            min-width: 44px;
+            justify-content: center;
+        }
+        
+        .navbar-signin ion-icon {
+            margin-left: 0;
+            font-size: 24px;
+        }
     }
 
 /*BANNER SECTION*/
@@ -2652,6 +2766,12 @@ footer{
         overflow: hidden;
         z-index: 50;
     }
+    
+    /* Ensure glass effect works on fixed header */
+    header::before {
+        position: fixed;
+        width: 100%;
+    }
 
         header.active{ top: 250px;}
 
@@ -2674,32 +2794,56 @@ footer{
         order: -1;
         width: 40px;
         height: 40px;
-        background: transparent;
-        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
         cursor: pointer;
-        z-index: 1001;
+        z-index: 1002;
         padding: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .navbar-menu-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
     }
     
         .navbar-menu-btn span{
             display: block;
-            background: var(--off-white);
+            background: var(--white);
             width: 25px;
-            height: 2px;
-            margin: 8px 0;
+            height: 3px;
+            margin: 4px 0;
             transition: all 0.3s ease;
+            border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
             
-            .navbar-menu-btn.active span{ background: var(--light-azure);}
+            .navbar-menu-btn.active span{ 
+                background: var(--light-azure);
+                box-shadow: 0 0 4px rgba(33, 150, 243, 0.5);
+            }
 
         .navbar-menu-btn .two {width: 20px;}
         .navbar-menu-btn .three{ width: 15px;}
 
-            .navbar-menu-btn.active .one{ transform: rotate(45deg) translateY(14px);}
-            .navbar-menu-btn.active .two{ width: 0;}
+            .navbar-menu-btn.active .one{ 
+                transform: rotate(45deg) translateY(14px);
+                background: var(--light-azure);
+            }
+            .navbar-menu-btn.active .two{ 
+                width: 0;
+                opacity: 0;
+            }
             .navbar-menu-btn.active .three{
                 width: 25px;
                 transform: rotate(-45deg) translateY(-14px);
+                background: var(--light-azure);
+            }
+            
+            .navbar-menu-btn.active {
+                background: rgba(33, 150, 243, 0.2);
+                border-color: var(--light-azure);
             }
 
 .navbar-overlay{
@@ -2708,8 +2852,9 @@ footer{
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(3px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     z-index: 999;
     display: none;
     animation: fadeIn 0.3s ease;
@@ -2722,13 +2867,58 @@ footer{
     width: 80%;
     max-width: 350px;
     height: 100vh;
-    background: var(--rich-blank-fogra-29);
+    background: rgba(26, 30, 40, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     z-index: 1000;
     transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border-right: 1px solid var(--oxford-blue);
-    box-shadow: 5px 0 30px rgba(0, 0, 0, 0.7);
+    border: none;
+    box-shadow: 5px 0 30px rgba(0, 0, 0, 0.8),
+                inset -1px 0 0 rgba(255, 255, 255, 0.05);
     overflow-y: auto;
     padding-top: 80px;
+    overflow-x: hidden;
+}
+
+/* Liquid Glass effect for mobile menu - highly translucent with moving mesh gradient */
+.navbar-menu::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(156, 39, 176, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(33, 150, 243, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(63, 81, 181, 0.18) 0%, transparent 50%),
+        radial-gradient(circle at 60% 60%, rgba(26, 35, 126, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 10% 90%, rgba(74, 20, 140, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 90% 10%, rgba(49, 27, 146, 0.1) 0%, transparent 50%);
+    background-size: 300% 300%;
+    animation: liquidFlow 25s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.8;
+    filter: blur(30px);
+}
+
+/* Additional overlay for depth */
+.navbar-menu::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.02) 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.1) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
 }
 
     .navbar-menu.active {
@@ -2739,27 +2929,37 @@ footer{
         position: absolute;
         top: 20px;
         right: 20px;
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--oxford-blue);
-        border: none;
+        background: rgba(33, 150, 243, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 50%;
         color: var(--white);
         cursor: pointer;
         transition: all 0.3s ease;
-        z-index: 10;
+        z-index: 1002;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4),
+                    0 0 0 2px rgba(33, 150, 243, 0.1);
     }
     
     .navbar-menu-close:hover{
         background: var(--light-azure);
-        transform: rotate(90deg);
+        transform: rotate(90deg) scale(1.1);
+        border-color: var(--light-azure);
+        box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5),
+                    0 0 0 2px rgba(33, 150, 243, 0.2);
     }
     
     .navbar-menu-close ion-icon{
-        font-size: 24px;
+        font-size: 26px;
+        color: var(--white);
+        --ionicon-stroke-width: 50px;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
     }
 
     .navbar-nav{
@@ -2770,6 +2970,8 @@ footer{
         gap: 5px;
         height: auto;
         overflow-y: auto;
+        position: relative;
+        z-index: 2;
     }
 
         .navbar-nav li{
@@ -2783,16 +2985,38 @@ footer{
             border-radius: 8px;
             margin: 2px 0;
             transition: all 0.3s ease;
+            color: var(--white);
+            font-weight: var(--fw6);
+            position: relative;
+            z-index: 2;
+            text-shadow: 
+                0 1px 2px rgba(0, 0, 0, 0.8),
+                0 2px 4px rgba(0, 0, 0, 0.6),
+                0 0 8px rgba(0, 0, 0, 0.4);
+            font-size: var(--font-size-medium);
+            letter-spacing: 0.5px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
         
         .navbar-nav .navbar-link:hover{
-            background: var(--oxford-blue);
+            background: rgba(33, 150, 243, 0.25);
             padding-left: 25px;
+            color: var(--light-azure);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6),
+                         0 0 15px rgba(33, 150, 243, 0.4);
+            transform: translateX(5px);
         }
         
         .navbar-nav .navbar-link.active{
-            background: var(--light-azure);
+            background: rgba(33, 150, 243, 0.35);
             color: var(--white);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7),
+                         0 0 20px rgba(33, 150, 243, 0.5);
+            font-weight: var(--fw7);
         }
         
         .navbar-nav .navbar-link.active::after{
@@ -2930,12 +3154,19 @@ footer{
     }
     
     .navbar-menu-close{
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
+        top: 15px;
+        right: 15px;
+        z-index: 1002;
+        background: rgba(33, 150, 243, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.25);
     }
     
     .navbar-menu-close ion-icon{
-        font-size: 20px;
+        font-size: 22px;
+        color: var(--white);
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
     }
     
     .modal-body{

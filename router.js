@@ -132,13 +132,20 @@ class Router {
         }
         
         // Close mobile menu if open
-        const header = document.querySelector('header');
-        const nav = document.querySelector('nav');
-        if (header && nav) {
-            header.classList.remove('active');
-            nav.classList.remove('active');
-            const menuBtn = document.querySelector('.navbar-menu-btn');
-            if (menuBtn) menuBtn.classList.remove('active');
+        if (typeof closeNavMenu === 'function') {
+            closeNavMenu();
+        } else {
+            // Fallback: manually close menu
+            const navbarMenu = document.querySelector('.navbar-menu');
+            const navbarMenuBtn = document.querySelector('.navbar-menu-btn');
+            const overlay = document.querySelector('.navbar-overlay');
+            
+            if (navbarMenu) {
+                navbarMenu.classList.remove('active');
+                if (navbarMenuBtn) navbarMenuBtn.classList.remove('active');
+                document.body.style.overflow = '';
+                if (overlay) overlay.style.display = 'none';
+            }
         }
         
         // Re-translate page after route change

@@ -1087,34 +1087,108 @@ const moviesData = [
     }
 ];
 
-// Banner movies for carousel - using IDs from moviesData
-const bannerMovies = [
-    {
-        id: 16, // Avengers: Endgame
-        genre: ["action", "scifi"]
-    },
-    {
-        id: 9, // The Dark Knight
-        genre: ["action", "adventure"]
-    },
-    {
-        id: 19, // First Beginning
-        genre: ["fantasy", "adventure"]
-    },
-    {
-        id: 37, // Inception
-        genre: ["action", "scifi"]
-    },
-    {
-        id: 20 // New Avengers
+// TMDB API Integration
+let tmdbMoviesLoaded = false;
+let allMoviesData = [...moviesData]; // Start with static data
+
+/**
+ * Load movies from TMDB API and merge with static data
+ */
+async function loadMoviesFromTMDB() {
+    try {
+        // Check if TMDB API functions are available
+        if (typeof initializeTMDBMovies === 'function') {
+            const tmdbMovies = await initializeTMDBMovies(100);
+            
+            if (tmdbMovies && tmdbMovies.length > 0) {
+                // Filter to only Marvel and DC movies
+                const marvelAndDCMovies = tmdbMovies.filter(movie => 
+                    movie.studio === 'Marvel' || movie.studio === 'DC'
+                );
+                
+                // Remove existing Marvel and DC movies from static data
+                allMoviesData = moviesData.filter(movie => 
+                    movie.studio !== 'Marvel' && movie.studio !== 'DC'
+                );
+                
+                // Add TMDB movies
+                allMoviesData = [...allMoviesData, ...marvelAndDCMovies];
+                
+                // Sort by release date (newest first)
+                allMoviesData.sort((a, b) => {
+                    if (b.releaseDate && a.releaseDate) {
+                        return new Date(b.releaseDate) - new Date(a.releaseDate);
+                    }
+                    return b.year - a.year;
+                });
+                
+                tmdbMoviesLoaded = true;
+                console.log(`Loaded ${marvelAndDCMovies.length} Marvel and DC movies from TMDB`);
+                
+                // Trigger a re-render if the app is already initialized
+                if (typeof filterAndRenderMovies === 'function') {
+                    filterAndRenderMovies();
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error loading movies from TMDB:', error);
+        // Fall back to static data
+        allMoviesData = [...moviesData];
     }
-].map(banner => {
-    const movie = moviesData.find(m => m.id === banner.id);
-    if (movie) {
-        return {
-            ...movie,
-            genre: banner.genre || movie.genre
-        };
-    }
-    return null;
-}).filter(Boolean);
+}
+
+// Auto-load TMDB movies when script loads (if API key is configured)
+if (typeof window !== 'undefined') {
+    // Load TMDB movies after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        loadMoviesFromTMDB().then(() => {
+            // Update banner movies after TMDB loads
+            if (typeof getBannerMovies === 'function') {
+                bannerMovies = getBannerMovies();
+            }
+        });
+    }, 1000);
+}
+
+/**
+ * Get banner movies for carousel
+ * @returns {Array} Array of banner movies
+ */
+function getBannerMovies() {
+    const bannerIds = [
+        {
+            id: 16, // Avengers: Endgame
+            genre: ["action", "scifi"]
+        },
+        {
+            id: 9, // The Dark Knight
+            genre: ["action", "adventure"]
+        },
+        {
+            id: 19, // First Beginning
+            genre: ["fantasy", "adventure"]
+        },
+        {
+            id: 37, // Inception
+            genre: ["action", "scifi"]
+        },
+        {
+            id: 20 // New Avengers
+        }
+    ];
+    
+    return bannerIds.map(banner => {
+        const movie = allMoviesData.find(m => m.id === banner.id);
+        if (movie) {
+            return {
+                ...movie,
+                genre: banner.genre || movie.genre
+            };
+        }
+        return null;
+    }).filter(Boolean);
+}
+
+// Initialize bannerMovies with static data, will be updated when TMDB loads
+let bannerMovies = getBannerMovies();

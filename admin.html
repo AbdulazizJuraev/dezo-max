@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Dezo Max</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="admin-header-content">
+                <div class="admin-logo">
+                    <img src="img/logo/dezo max.png" alt="Dezo Max Logo">
+                    <h1>Admin Dashboard</h1>
+                </div>
+                <div class="admin-header-actions">
+                    <a href="index.html" class="admin-btn-secondary">
+                        <ion-icon name="home"></ion-icon>
+                        Back to Site
+                    </a>
+                    <button class="admin-btn-secondary" id="logoutBtn">
+                        <ion-icon name="log-out"></ion-icon>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Admin Main Content -->
+        <main class="admin-main">
+            <!-- Sidebar Navigation -->
+            <aside class="admin-sidebar">
+                <nav class="admin-nav">
+                    <a href="#movies" class="admin-nav-item active" data-section="movies">
+                        <ion-icon name="film"></ion-icon>
+                        <span>Movie Management</span>
+                    </a>
+                    <a href="#settings" class="admin-nav-item" data-section="settings">
+                        <ion-icon name="settings"></ion-icon>
+                        <span>Site Settings</span>
+                    </a>
+                    <a href="#statistics" class="admin-nav-item" data-section="statistics">
+                        <ion-icon name="stats-chart"></ion-icon>
+                        <span>Statistics</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="admin-content">
+                <!-- Statistics Section -->
+                <section id="statistics" class="admin-section">
+                    <div class="admin-section-header">
+                        <h2>Statistics Overview</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon marvel">
+                                <ion-icon name="logo-react"></ion-icon>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="marvelCount">0</h3>
+                                <p>Marvel Movies</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon dc">
+                                <ion-icon name="flash"></ion-icon>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="dcCount">0</h3>
+                                <p>DC Movies</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon total">
+                                <ion-icon name="videocam"></ion-icon>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalCount">0</h3>
+                                <p>Total Movies</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon goal">
+                                <ion-icon name="trophy"></ion-icon>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="goalProgress">0%</h3>
+                                <p>Goal Progress (100+)</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Movie Management Section -->
+                <section id="movies" class="admin-section active">
+                    <div class="admin-section-header">
+                        <h2>Movie Management</h2>
+                        <button class="admin-btn-primary" id="addMovieBtn">
+                            <ion-icon name="add"></ion-icon>
+                            Add New Movie
+                        </button>
+                    </div>
+
+                    <!-- Add/Edit Movie Modal -->
+                    <div class="admin-modal" id="movieModal">
+                        <div class="admin-modal-overlay"></div>
+                        <div class="admin-modal-content">
+                            <div class="admin-modal-header">
+                                <h3 id="modalTitle">Add New Movie</h3>
+                                <button class="admin-modal-close" id="closeModalBtn">
+                                    <ion-icon name="close"></ion-icon>
+                                </button>
+                            </div>
+                            <form id="movieForm" class="admin-form">
+                                <input type="hidden" id="movieId" name="id">
+                                
+                                <div class="form-group">
+                                    <label for="movieTitle">Title *</label>
+                                    <input type="text" id="movieTitle" name="title" required 
+                                           placeholder="Enter movie title">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="movieUniverse">Universe *</label>
+                                    <select id="movieUniverse" name="universe" required>
+                                        <option value="">Select Universe</option>
+                                        <option value="Marvel">Marvel</option>
+                                        <option value="DC">DC</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="movieYear">Release Year *</label>
+                                    <input type="number" id="movieYear" name="year" required 
+                                           min="1900" max="2030" placeholder="2024">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="moviePoster">Poster Image URL *</label>
+                                    <input type="url" id="moviePoster" name="poster" required 
+                                           placeholder="https://example.com/poster.jpg">
+                                    <small>Enter a valid image URL</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="movieDescription">Description *</label>
+                                    <textarea id="movieDescription" name="description" required 
+                                              rows="4" placeholder="Enter movie description"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="movieDuration">Duration</label>
+                                    <input type="text" id="movieDuration" name="duration" 
+                                           placeholder="2h 15min" value="2h 0min">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="movieGenre">Genre</label>
+                                    <input type="text" id="movieGenre" name="genre" 
+                                           placeholder="action, adventure" value="action, adventure">
+                                    <small>Comma-separated genres</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="movieRating">IMDb Rating</label>
+                                    <input type="number" id="movieRating" name="rating" 
+                                           step="0.1" min="0" max="10" placeholder="7.5">
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="admin-btn-secondary" id="cancelBtn">Cancel</button>
+                                    <button type="submit" class="admin-btn-primary">
+                                        <span id="submitBtnText">Add Movie</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Movies Table -->
+                    <div class="admin-table-container">
+                        <div class="admin-table-header">
+                            <div class="table-search">
+                                <ion-icon name="search"></ion-icon>
+                                <input type="text" id="movieSearch" placeholder="Search movies...">
+                            </div>
+                            <div class="table-filters">
+                                <select id="universeFilter">
+                                    <option value="">All Universes</option>
+                                    <option value="Marvel">Marvel</option>
+                                    <option value="DC">DC</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Poster</th>
+                                        <th>Title</th>
+                                        <th>Universe</th>
+                                        <th>Year</th>
+                                        <th>Rating</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="moviesTableBody">
+                                    <!-- Movies will be dynamically inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="admin-table-footer">
+                            <div class="table-info">
+                                <span id="tableInfo">Showing 0 movies</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Site Settings Section -->
+                <section id="settings" class="admin-section">
+                    <div class="admin-section-header">
+                        <h2>Site Settings</h2>
+                    </div>
+
+                    <div class="settings-grid">
+                        <!-- Maintenance Mode -->
+                        <div class="settings-card">
+                            <div class="settings-card-header">
+                                <h3>Maintenance Mode</h3>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="maintenanceMode">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <p>Enable maintenance mode to temporarily disable the site for visitors.</p>
+                        </div>
+
+                        <!-- Hero Banner Text -->
+                        <div class="settings-card">
+                            <div class="settings-card-header">
+                                <h3>Hero Banner Text</h3>
+                            </div>
+                            <div class="form-group">
+                                <label for="heroBannerText">Banner Text</label>
+                                <input type="text" id="heroBannerText" 
+                                       placeholder="Welcome to Dezo Max">
+                                <small>This text appears on the main hero banner</small>
+                            </div>
+                            <button class="admin-btn-primary" id="saveBannerTextBtn">
+                                Save Banner Text
+                            </button>
+                        </div>
+
+                        <!-- Site Title -->
+                        <div class="settings-card">
+                            <div class="settings-card-header">
+                                <h3>Site Title</h3>
+                            </div>
+                            <div class="form-group">
+                                <label for="siteTitle">Title</label>
+                                <input type="text" id="siteTitle" 
+                                       placeholder="Dezo Max">
+                                <small>Main site title displayed in browser tab</small>
+                            </div>
+                            <button class="admin-btn-primary" id="saveSiteTitleBtn">
+                                Save Site Title
+                            </button>
+                        </div>
+
+                        <!-- Data Management -->
+                        <div class="settings-card">
+                            <div class="settings-card-header">
+                                <h3>Data Management</h3>
+                            </div>
+                            <div class="settings-actions">
+                                <button class="admin-btn-secondary" id="exportDataBtn">
+                                    <ion-icon name="download"></ion-icon>
+                                    Export Movies Data
+                                </button>
+                                <button class="admin-btn-secondary" id="importDataBtn">
+                                    <ion-icon name="cloud-upload"></ion-icon>
+                                    Import Movies Data
+                                </button>
+                                <button class="admin-btn-danger" id="clearDataBtn">
+                                    <ion-icon name="trash"></ion-icon>
+                                    Clear All Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Import Data Modal -->
+    <div class="admin-modal" id="importModal">
+        <div class="admin-modal-overlay"></div>
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h3>Import Movies Data</h3>
+                <button class="admin-modal-close" id="closeImportModalBtn">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+            </div>
+            <div class="admin-form">
+                <div class="form-group">
+                    <label for="importData">Paste JSON Data</label>
+                    <textarea id="importData" rows="10" 
+                              placeholder='[{"id": 1, "title": "Movie Title", ...}]'></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="admin-btn-secondary" id="cancelImportBtn">Cancel</button>
+                    <button type="button" class="admin-btn-primary" id="confirmImportBtn">Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="admin-toast" id="adminToast">
+        <span id="adminToastMessage"></span>
+    </div>
+
+    <script src="movies.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
