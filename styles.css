@@ -12,6 +12,8 @@
     --yellow: hsl(45, 100%, 54%);
     --white: hsl(0, 0%, 100%);
     --azure: hsl(211, 100%, 50%);
+    
+
 
     --font-family: "Inter", sans-serif;
 
@@ -113,13 +115,8 @@ a{
 
 header, nav { 
     position: relative;
-    background: rgba(26, 30, 40, 0.3);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: none;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 
-                0 2px 8px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    
+   
     transition: all 0.3s ease;
     overflow: hidden;
 }
@@ -240,10 +237,11 @@ header.scrolled::before {
     align-items: center;
     gap: 30px;
     position: relative;
-    padding: 0 var(--padding-x);
+    padding: 10px 30px 10px 30px; 
     z-index: 2;
 }
 
+/* Hidden on desktop; shown in mobile media query below */
 .navbar-menu-btn{ 
     display: none;
     flex-shrink: 0;
@@ -277,12 +275,23 @@ header.scrolled::before {
     image-rendering: crisp-edges;
 }
 
+/* Desktop navbar menu (navigation links container) */
 .navbar-menu{ 
     flex: 1;
     min-width: 0;
     overflow: hidden;
     display: flex;
     justify-content: center;
+}
+
+/* Hide mobile slide-out menu and hamburger on desktop */
+@media screen and (min-width: 1201px) {
+    .navbar-menu[class*="mobile"] {
+        display: none !important;
+    }
+    .navbar-menu-btn {
+        display: none !important;
+    }
 }
 
 .navbar-menu-close{
@@ -368,21 +377,28 @@ header.scrolled::before {
 }
 
 .navbar-form-btn{
-    background: var(--oxford-blue);
+    background: rgba(0, 0, 0, 0.1);
     position: absolute;
-    top: calc(50% - 10px);
-    right: 10px;
+    top: calc(14% - 0px);
+    right: 25px;
 }
 
 .navbar-form-btn ion-icon, .navbar-search-btn ion-icon{
     font-size: 20px;
-    color: var(--light-azure);
+    color: blue;
     --ionicon-stroke-width: 50px;
 }
 
     .navbar-form-btn:hover ion-icon, .navbar-form-search::placeholder { color: var(--off-white);}
 
 .navbar-form-close, .navbar-search-btn{ display: none;}
+
+/* Hide mobile menu search form on desktop */
+@media screen and (min-width: 1201px) {
+    .navbar-menu .navbar-form {
+        display: none !important;
+    }
+}
 
 .navbar-signin{
     display: flex;
@@ -490,8 +506,8 @@ header.scrolled::before {
 .carousel-control-prev,
 .carousel-control-next{
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 60%;
+    transform: translateY(-60%);
     z-index: 10;
     background: rgba(0, 0, 0, 0.5);
     border: none;
@@ -502,7 +518,7 @@ header.scrolled::before {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 1s ease;
     color: var(--white);
     font-size: 24px;
 }
@@ -561,12 +577,11 @@ header.scrolled::before {
 
 .banner-card{
     position: relative;
-    height: 400px;
+    height: 500px;
     overflow: hidden;
-    border-radius: 20px;
+    padding-x: 0px;
     cursor: pointer;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 1s ease, box-shadow 0.3s ease;
 }
 
 .banner-card:hover{
@@ -1220,15 +1235,15 @@ footer{
     background: rgba(255, 255, 255, 0.5);
     border: 2px solid rgba(255, 255, 255, 0.8);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 1s ease;
     padding: 0;
 }
 
 .carousel-indicators button.active{
-    background: var(--light-azure);
-    border-color: var(--light-azure);
-    width: 30px;
-    border-radius: 6px;
+    background: var(--live-indicator-shadow);
+    border-color: var(--live-indicator-shadow);
+    width: 50px;
+    border-radius: 50px;
 }
 
 .carousel-control-prev,
@@ -1842,12 +1857,13 @@ footer{
 .page-section{
     display: none;
     padding: 0 var(--padding-x);
-    margin-top: 100px;
+    margin-top: 0px;
     animation: fadeIn 0.3s ease;
 }
 
 .page-section.active{
     display: block;
+    padding: 0px 50px 50px 50px;
 }
 
 /*TV CHANNELS*/
@@ -2704,7 +2720,6 @@ footer{
     width: 100%;
     height: 100%;
     border: none;
-}
     color: var(--white);
     border: 2px solid var(--light-azure);
 }
@@ -2755,7 +2770,7 @@ footer{
 
 @media screen and (max-width: 1200px){
     :root{
-        --padding-x: 80px;
+        --padding-x: 10px;
     }
 
     header{
@@ -2765,6 +2780,10 @@ footer{
         width: 100%;
         overflow: hidden;
         z-index: 50;
+    }
+    /* Ensure navbar content (including hamburger) is not clipped */
+    header .navbar{
+        overflow: visible;
     }
     
     /* Ensure glass effect works on fixed header */
@@ -2776,7 +2795,7 @@ footer{
         header.active{ top: 250px;}
 
     .navbar{
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: 200px 1fr auto;
         gap: 20px;
     }
     
@@ -2785,8 +2804,11 @@ footer{
         max-width: 150px;
     }
     
+    /* Hamburger: always visible on mobile, above other header content */
     .navbar-menu-btn{
-        display: flex;
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -2794,7 +2816,8 @@ footer{
         order: -1;
         width: 40px;
         height: 40px;
-        background: rgba(255, 255, 255, 0.1);
+        min-width: 40px;
+        background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 8px;
         cursor: pointer;
@@ -2846,39 +2869,28 @@ footer{
                 border-color: var(--light-azure);
             }
 
-.navbar-overlay{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    z-index: 999;
-    display: none;
-    animation: fadeIn 0.3s ease;
-}
+    /* Overlay for mobile menu - DISABLED (no dimming effect) */
+    .navbar-overlay{
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
 
-.navbar-menu{
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 80%;
-    max-width: 350px;
-    height: 100vh;
-    background: rgba(26, 30, 40, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    z-index: 1000;
-    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: none;
-    box-shadow: 5px 0 30px rgba(0, 0, 0, 0.8),
-                inset -1px 0 0 rgba(255, 255, 255, 0.05);
-    overflow-y: auto;
-    padding-top: 80px;
-    overflow-x: hidden;
-}
+    /* Mobile slide-out menu - slides from left to right */
+    .navbar-menu{
+        position: fixed !important;
+        top: 0 !important;
+        left: -100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100% !important;
+        background:  rgba(71, 71, 71, 0.671)!important;
+        display: block !important; /* Override desktop flex */
+        flex: none !important;
+        min-width: auto !important;
+        justify-content: flex-start !important;
+    }
 
 /* Liquid Glass effect for mobile menu - highly translucent with moving mesh gradient */
 .navbar-menu::before {
@@ -2888,19 +2900,12 @@ footer{
     left: -50%;
     width: 200%;
     height: 200%;
-    background: 
-        radial-gradient(circle at 20% 50%, rgba(156, 39, 176, 0.25) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(33, 150, 243, 0.2) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(63, 81, 181, 0.18) 0%, transparent 50%),
-        radial-gradient(circle at 60% 60%, rgba(26, 35, 126, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 10% 90%, rgba(74, 20, 140, 0.12) 0%, transparent 50%),
-        radial-gradient(circle at 90% 10%, rgba(49, 27, 146, 0.1) 0%, transparent 50%);
-    background-size: 300% 300%;
-    animation: liquidFlow 25s ease-in-out infinite;
+    background-size: 400% 400%;
+    animation: liquidFlow 30s ease-in-out infinite;
     pointer-events: none;
     z-index: -1;
-    opacity: 0.8;
-    filter: blur(30px);
+    opacity: 0.9;
+    filter: blur(40px);
 }
 
 /* Additional overlay for depth */
@@ -2922,51 +2927,133 @@ footer{
 }
 
     .navbar-menu.active {
-        left: 0;
+        left: 0 !important;
     }
     
     .navbar-menu-close{
         position: absolute;
-        top: 20px;
-        right: 20px;
-        width: 45px;
-        height: 45px;
+        top: 165px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(33, 150, 243, 0.2);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
+        background: rgba(122, 122, 122, 0.3);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 2px solid rgba(255, 255, 255, 0.616);
+        border-radius: 20%;
         color: var(--white);
         cursor: pointer;
         transition: all 0.3s ease;
-        z-index: 1002;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4),
-                    0 0 0 2px rgba(33, 150, 243, 0.1);
+        z-index: 1003;
+       
     }
     
     .navbar-menu-close:hover{
-        background: var(--light-azure);
-        transform: rotate(90deg) scale(1.1);
-        border-color: var(--light-azure);
-        box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5),
-                    0 0 0 2px rgba(33, 150, 243, 0.2);
+        background: rgba(244, 67, 54, 0.5);
+        transform: rotate(90deg) scale(1.15);
+        border-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 25px rgba(244, 67, 54, 0.6),
+                    0 0 0 3px rgba(244, 67, 54, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
     
     .navbar-menu-close ion-icon{
-        font-size: 26px;
+        font-size: 28px;
         color: var(--white);
+        --ionicon-stroke-width: 60px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    }
+
+    /* Hide desktop search form on mobile - search is only in mobile menu */
+    .navbar-actions .navbar-form {
+        display: none !important;
+    }
+    
+    .navbar-actions .navbar-search-btn {
+        display: none !important;
+    }
+
+    /* Search bar in mobile menu */
+    .navbar-menu .navbar-form {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        height: auto;
+        margin: 80px 20px 20px 20px;
+        padding: 15px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: none;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        z-index: 2;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .navbar-menu .navbar-form-search {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.12);
+        border: none;
+        color: var(--white);
+        padding: 12px 15px;
+        border-radius: 10px;
+        font-size: var(--font-size-small);
+        font-weight: var(--fw5);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .navbar-menu .navbar-form-search::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .navbar-menu .navbar-form-search:focus {
+        background: rgba(255, 255, 255, 0.18);
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3),
+                    inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        outline: none;
+    }
+    
+    .navbar-menu .navbar-form-btn {
+        background: var(--azure);
+        color: rgb(255, 255, 255);
+        padding: 2px 2px;
+        border-radius: 10px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 10px;
+    
+        
+    }
+    
+    .navbar-menu .navbar-form-btn:hover {
+        background color: blue;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(33, 150, 243, 0.5);
+    }
+    
+    .navbar-menu .navbar-form-btn ion-icon {
+        font-size: 20px;
         --ionicon-stroke-width: 50px;
-        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
     }
 
     .navbar-nav{
         flex-direction: column;
         justify-content: flex-start;
         align-items: stretch;
-        padding: 20px;
+        padding: 0 20px 20px 20px;
         gap: 5px;
         height: auto;
         overflow-y: auto;
@@ -2980,9 +3067,9 @@ footer{
         
         .navbar-nav .navbar-link{
             width: 100%;
-            padding: 15px 20px;
+            padding:10px 10px;
             display: block;
-            border-radius: 8px;
+            border-radius: 50px;
             margin: 2px 0;
             transition: all 0.3s ease;
             color: var(--white);
@@ -2991,7 +3078,7 @@ footer{
             z-index: 2;
             text-shadow: 
                 0 1px 2px rgba(0, 0, 0, 0.8),
-                0 2px 4px rgba(0, 0, 0, 0.6),
+                0 2px 4px rgba(0, 0, 0, 0.164),
                 0 0 8px rgba(0, 0, 0, 0.4);
             font-size: var(--font-size-medium);
             letter-spacing: 0.5px;
@@ -3022,45 +3109,6 @@ footer{
         .navbar-nav .navbar-link.active::after{
             display: none;
         }
-    
-    .navbar-form{
-        position: absolute;
-        top: 100%;
-        left: var(--padding-x);
-        right: var(--padding-x);
-        height: 100%;
-        background: var(--rich-blank-fogra-29);
-        margin-right: 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 100;
-    }
-
-        .navbar-form.active{ top: 0;}
-    
-    .navbar-form-search{ margin-right: 40px;}
-
-    .navbar-form-btn{ right: 80px;}
-
-    .navbar-form-close{
-        display: block;
-        padding-top: 4px;
-        opacity: .8;
-    }
-
-        .navbar-form-close:hover{ opacity: 1;}
-
-        .navbar-form-close ion-icon{
-            font-size: 30px;
-            color: var(--light-azure);
-        }
-
-    .navbar-search-btn{
-        display: block;
-        margin-right: 100px;
-        padding-top: 5px;
-    }
 
     .banner{ margin-top: 100px;}
 
@@ -3081,7 +3129,7 @@ footer{
 
 @media screen and (max-width: 1200px){
     :root{
-        --padding-x: 60px;
+        --padding-x: 10px;
     }
 
     .banner-card .card-content{
@@ -3093,7 +3141,7 @@ footer{
 
 @media screen and (max-width: 768px){
     :root{
-        --padding-x: 40px;
+        --padding-x: 0px;
     }
 
     .banner{
@@ -3230,7 +3278,7 @@ footer{
 
 @media screen and (max-width: 575px){
     :root{
-        --padding-x: 20px;
+        --padding-x: 0px;
         --section-heading: 32px;
         --font-size-large: 20px;
     }

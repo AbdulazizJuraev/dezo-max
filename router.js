@@ -138,13 +138,11 @@ class Router {
             // Fallback: manually close menu
             const navbarMenu = document.querySelector('.navbar-menu');
             const navbarMenuBtn = document.querySelector('.navbar-menu-btn');
-            const overlay = document.querySelector('.navbar-overlay');
             
             if (navbarMenu) {
                 navbarMenu.classList.remove('active');
                 if (navbarMenuBtn) navbarMenuBtn.classList.remove('active');
                 document.body.style.overflow = '';
-                if (overlay) overlay.style.display = 'none';
             }
         }
         

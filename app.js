@@ -45,16 +45,13 @@ let currentFilters = {
 // ==================== Navigation Functions ====================
 function closeNavMenu() {
     const navbarMenu = document.querySelector('.navbar-menu');
-    const overlay = document.querySelector('.navbar-overlay');
     
     if (navbarMenu) {
         navbarMenu.classList.remove('active');
         navbarMenuBtn.classList.remove('active');
         document.body.style.overflow = '';
         
-        if (overlay) {
-            overlay.style.display = 'none';
-        }
+        // Overlay removed - no need to hide it
     }
 }
 
@@ -66,30 +63,8 @@ function navIsActive() {
         navbarMenuBtn.classList.toggle('active', isActive);
         document.body.style.overflow = isActive ? 'hidden' : '';
         
-        // Create or remove overlay
-        let overlay = document.querySelector('.navbar-overlay');
-        if (isActive) {
-            if (!overlay) {
-                overlay = document.createElement('div');
-                overlay.className = 'navbar-overlay';
-                document.body.appendChild(overlay);
-            }
-            overlay.style.display = 'block';
-            
-            // Close menu when clicking overlay
-            const closeMenu = () => {
-                closeNavMenu();
-                overlay.removeEventListener('click', closeMenu);
-            };
-            
-            setTimeout(() => {
-                overlay.addEventListener('click', closeMenu);
-            }, 100);
-        } else {
-            if (overlay) {
-                overlay.style.display = 'none';
-            }
-        }
+        // Overlay removed - no dimming effect
+        // Menu can be closed by clicking the close button or a navigation link
     }
 }
 
@@ -1060,6 +1035,55 @@ navbarFormSearch.addEventListener('input', (e) => {
     // Also update the displayed count
     displayedCount = 12;
 });
+
+// Mobile search form integration
+const mobileSearchForm = document.getElementById('mobileSearchForm');
+const mobileSearchInput = document.getElementById('mobileSearchInput');
+
+if (mobileSearchForm && mobileSearchInput) {
+    // Sync mobile search with main search
+    mobileSearchInput.addEventListener('input', (e) => {
+        const searchValue = e.target.value.trim();
+        currentFilters.search = searchValue;
+        
+        // Update main search input if it exists
+        if (navbarFormSearch) {
+            navbarFormSearch.value = searchValue;
+        }
+        
+        // Filter and render movies in real-time
+        filterAndRenderMovies();
+        displayedCount = 12;
+    });
+    
+    // Handle form submit
+    mobileSearchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const searchValue = mobileSearchInput.value.trim();
+        currentFilters.search = searchValue;
+        
+        // Update main search input if it exists
+        if (navbarFormSearch) {
+            navbarFormSearch.value = searchValue;
+        }
+        
+        filterAndRenderMovies();
+        
+        // Close mobile menu after search
+        if (window.innerWidth <= 1200) {
+            closeNavMenu();
+        }
+    });
+    
+    // Sync main search to mobile search
+    if (navbarFormSearch) {
+        navbarFormSearch.addEventListener('input', (e) => {
+            if (mobileSearchInput) {
+                mobileSearchInput.value = e.target.value;
+            }
+        });
+    }
+}
 
 genreFilter.addEventListener('change', (e) => {
     currentFilters.genre = e.target.value;

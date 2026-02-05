@@ -203,7 +203,7 @@ const moviesData = [
         year: 2019,
         duration: "3h 1min",
         quality: "4K",
-        poster: "https://i.postimg.cc/6QSXtjKx/endgame.jpg",
+        poster: "https://avatars.mds.yandex.net/i?id=7c1659452ca8d57e90f647eb8de8bd753caef8c2-5587421-images-thumbs&n=13https://cdn.marvel.com/content/2x/avengersendgame_lob_crd_05.jpg",
         studio: "Marvel",
         trailer: "https://www.youtube.com/embed/TcMBFSGVi1c",
         cast: ["Robert Downey Jr.", "Chris Evans", "Mark Ruffalo"],
@@ -255,7 +255,7 @@ const moviesData = [
         year: 2008,
         duration: "2h 6min",
         quality: "4K",
-        poster: "https://i.postimg.cc/8zQvJxK5/iron-man.jpg",
+        poster: "https://cdn.marvel.com/content/2x/ironman_lob_crd_01_4.jpg",
         studio: "Marvel",
         trailer: "https://www.youtube.com/embed/8ugaeA-nMTc",
         cast: ["Robert Downey Jr.", "Gwyneth Paltrow", "Jeff Bridges"],
@@ -281,7 +281,7 @@ const moviesData = [
         year: 2011,
         duration: "2h 4min",
         quality: "4K",
-        poster: "https://i.postimg.cc/8zQvJxK5/captain-america.jpg",
+        poster: "https://cdn.marvel.com/content/2x/captainamericathefirstavenger_lob_crd_01_0.jpg",
         studio: "Marvel",
         trailer: "https://www.youtube.com/embed/JerV8L3QdHA",
         cast: ["Chris Evans", "Hayley Atwell", "Sebastian Stan"],
@@ -1075,7 +1075,7 @@ const moviesData = [
         year: 2025,
         duration: "2h 11min",
         quality: "4K",
-        poster: "img/20653dad1856cd6aae435b229976d1c6.jpg",
+        poster: "https://cdn.marvel.com/content/2x/thenewavengers_lob_crd_01.jpg",
         studio: "Marvel",
         trailer: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         cast: ["Unknown", "Unknown", "Unknown"],
@@ -1084,7 +1084,11 @@ const moviesData = [
             rottenTomatoes: 80,
             dezo: 8.5
         }
+
+        
     }
+
+    
 ];
 
 // TMDB API Integration
