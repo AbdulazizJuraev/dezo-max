@@ -203,7 +203,7 @@ header.scrolled::before {
 
 
 .container{
-    max-width: 1920px;
+    max-width: 90%;
     margin: auto;
 }
 
