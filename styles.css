@@ -2626,7 +2626,7 @@ footer{
 }
 
 .modal-ratings-container{
-    margin: 20px 0;
+    margin: 0px 0;
 }
 
 .modal-actions{
@@ -3277,7 +3277,7 @@ footer{
 
 }
 
-@media screen and (max-width: 575px){
+@media screen and (max-width: 634px){
     :root{
         --padding-x: 0px;
         --section-heading: 32px;
@@ -3305,9 +3305,25 @@ footer{
     }
     
     .modal-content{
-        padding: 10px;
+        position: relative;
+    background: var(--rich-blank-fogra-29);
+    border-radius: 20px;
+    max-width: 550px;
+    width: 90%;
+    max-height: 70vh;
+    overflow-y: auto;
+    z-index: 1001;
+    animation: slideUp 0.3s 
+ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
     }
     
+    .modal-poster{
+        max-width: 280px;
+        margin: 0 auto;
+    }
+
     .modal-body{
         padding: 15px;
         gap: 20px;
@@ -3315,6 +3331,7 @@ footer{
     
     .modal-title{
         font-size: 1.5em;
+        text-align: center;
     }
     
     .movies-grid{
