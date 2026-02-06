@@ -982,7 +982,7 @@ const moviesData = [
         year: 2010,
         duration: "2h 28min",
         quality: "4K",
-        poster: "https://i.postimg.cc/8zQvJxK5/inception.jpg",
+        poster: "https://cdn.marvel.com/content/2x/fantastic_four_walmart.jpeg",
         studio: "Warner Bros",
         trailer: "https://www.youtube.com/embed/YoHD9XEInc0",
         cast: ["Leonardo DiCaprio", "Marion Cotillard", "Tom Hardy"],
