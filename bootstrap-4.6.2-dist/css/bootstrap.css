@@ -7556,6 +7556,12 @@ button.bg-dark:focus {
     -ms-flex-direction: column !important;
     flex-direction: column !important;
   }
+
+  .navbar {
+    grid-template-columns: 206px 1fr auto;
+    gap: 20px;
+}
+
   .flex-md-row-reverse {
     -ms-flex-direction: row-reverse !important;
     flex-direction: row-reverse !important;
@@ -10067,6 +10073,12 @@ button.bg-dark:focus {
   .text-sm-center {
     text-align: center !important;
   }
+
+  .navbar {
+    grid-template-columns: 57px 1fr auto;
+    gap: 20px;
+}
+
 }
 
 @media (min-width: 768px) {
