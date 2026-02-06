@@ -2788,6 +2788,11 @@ footer{
         overflow: hidden;
         z-index: 50;
     }
+
+    /* Single top offset so content starts directly under fixed header (no extra gap) */
+    .container{
+        padding-top: 72px;
+    }
     /* Ensure navbar content (including hamburger) is not clipped */
     header .navbar{
         overflow: visible;
@@ -3114,8 +3119,6 @@ footer{
             display: none;
         }
 
-    .banner{ margin-top: 100px;}
-
     .banner-card .card-title{ font-size: 2.5em;}
 
     .category-grid{ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));}
@@ -3148,10 +3151,6 @@ footer{
         --padding-x: 0px;
     }
 
-    .banner{
-        margin-top: 100px;
-    }
-    
     .banner-card .card-content{
         bottom: 30px;
         left: 30px;
@@ -3268,8 +3267,6 @@ footer{
     .modal-trailer iframe{
         height: 250px;
     }
-
-    .movies{ margin-top: 120px;}
 
     .filter-bar{
         flex-direction: column;
@@ -3409,7 +3406,7 @@ footer{
 
 /* ==================== Movies Carousel Page (Show more) ==================== */
 .movies-carousel-page {
-    padding: 1.5rem 1rem 3rem;
+    padding: 0.5rem 1rem 3rem;
     max-width: 100%;
 }
 
