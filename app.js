@@ -379,7 +379,7 @@ function renderMovies(movies, append = false, targetGrid = null) {
                 <p>${noMoviesDesc}</p>
             </div>
         `;
-        if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+        document.querySelectorAll('.load-more').forEach(btn => { btn.style.display = 'none'; });
         return;
     }
     
@@ -390,19 +390,61 @@ function renderMovies(movies, append = false, targetGrid = null) {
         grid.appendChild(card);
     });
     
-    // Show/hide load more button
-    if (loadMoreBtn) {
-        if (movies.length > displayedCount) {
-            loadMoreBtn.style.display = 'block';
-        } else {
-            loadMoreBtn.style.display = 'none';
-        }
-    }
+    // Show/hide all "Show more" buttons
+    document.querySelectorAll('.load-more').forEach(btn => {
+        btn.style.display = movies.length > displayedCount ? 'block' : 'none';
+    });
 }
 
 function loadMoreMovies() {
     displayedCount += 12;
     filterAndRenderMovies();
+}
+
+// ==================== Movies Carousel Page (Show more) ====================
+function initMoviesCarousel() {
+    const track = document.getElementById('moviesCarouselTrack');
+    const container = document.getElementById('moviesCarouselContainer');
+    const prevBtn = document.querySelector('.carousel-arrow-prev');
+    const nextBtn = document.querySelector('.carousel-arrow-next');
+    if (!track || !container) return;
+
+    const movies = filterMovies();
+    track.innerHTML = '';
+
+    if (movies.length === 0) {
+        const noMoviesTitle = typeof i18n !== 'undefined' ? i18n.t('movies.noMovies') : 'No movies found';
+        track.innerHTML = `<div class="movies-carousel-empty">${noMoviesTitle}</div>`;
+        return;
+    }
+
+    movies.forEach(movie => {
+        const card = createMovieCard(movie);
+        card.classList.add('movies-carousel-card');
+        track.appendChild(card);
+    });
+
+    container.scrollLeft = 0;
+
+    if (!window._moviesCarouselListenersAttached) {
+        window._moviesCarouselListenersAttached = true;
+        function scrollCarousel(direction) {
+            const cont = document.getElementById('moviesCarouselContainer');
+            if (!cont) return;
+            const step = cont.clientWidth * 0.85;
+            const target = cont.scrollLeft + (direction === 'next' ? step : -step);
+            cont.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+        }
+        if (prevBtn) prevBtn.addEventListener('click', () => scrollCarousel('prev'));
+        if (nextBtn) nextBtn.addEventListener('click', () => scrollCarousel('next'));
+        let touchStartX = 0;
+        container.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+        container.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) container.scrollBy({ left: diff, behavior: 'smooth' });
+        }, { passive: true });
+    }
 }
 
 // ==================== Filter Functions ====================
@@ -819,7 +861,7 @@ function renderBanner() {
         return `
             <div class="carousel-item ${index === 0 ? 'active' : ''}" data-slide="${index}">
                 <section class="banner">
-                    <div class="banner-card" data-movie-id="${movie.id}">
+                    <div class="" data-movie-id="${movie.id}">
                         <img src="${bannerPoster}" alt="${title}" class="banner-img" data-poster="${bannerPoster}">
                         <div class="card-content">
                             <div class="card-info">
@@ -847,7 +889,7 @@ function renderBanner() {
     
     // Add click handlers to banner cards and setup image fallbacks
     setTimeout(() => {
-        document.querySelectorAll('.banner-card').forEach(card => {
+        document.querySelectorAll('.').forEach(card => {
             card.style.cursor = 'pointer';
             card.addEventListener('click', () => {
                 const movieId = parseInt(card.dataset.movieId);
@@ -1102,7 +1144,14 @@ studioRadios.forEach(radio => {
     });
 });
 
-loadMoreBtn.addEventListener('click', loadMoreMovies);
+// "Show more" / "Yana ko'rsatish" opens carousel page (new route)
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.load-more');
+    if (btn) {
+        e.preventDefault();
+        if (typeof router !== 'undefined') router.navigate('movies-carousel');
+    }
+});
 
 // ==================== Authentication Functions ====================
 function showAuthModal(form = 'login') {
@@ -1326,10 +1375,10 @@ function initLanguageModal() {
                         if (p) p.textContent = i18n.t('movies.noMoviesDesc');
                     }
                     
-                    // Update load more button
-                    if (loadMoreBtn) {
-                        loadMoreBtn.textContent = i18n.t('movies.loadMore');
-                    }
+                    // Update "Show more" buttons
+                    document.querySelectorAll('.load-more').forEach(btn => {
+                        btn.textContent = i18n.t('movies.showMore');
+                    });
                 }
             }
             closeLanguageModal();

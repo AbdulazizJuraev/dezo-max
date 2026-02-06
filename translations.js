@@ -92,7 +92,10 @@ const translations = {
             studio: "Studiya",
             quality: "Sifat",
             description: "Tavsif",
-            noDescription: "Tavsif mavjud emas"
+            noDescription: "Tavsif mavjud emas",
+            showMore: "Yana ko'rsatish",
+            carouselBack: "Orqaga",
+            carouselTitle: "Barcha filmlar"
         },
         
         // Ratings
@@ -359,7 +362,10 @@ const translations = {
             studio: "Студия",
             quality: "Качество",
             description: "Описание",
-            noDescription: "Описание недоступно"
+            noDescription: "Описание недоступно",
+            showMore: "Показать еще",
+            carouselBack: "Назад",
+            carouselTitle: "Все фильмы"
         },
         
         // Ratings
@@ -626,7 +632,10 @@ const translations = {
             studio: "Studio",
             quality: "Quality",
             description: "Description",
-            noDescription: "No description available"
+            noDescription: "No description available",
+            showMore: "Show more",
+            carouselBack: "Back",
+            carouselTitle: "All movies"
         },
         
         // Ratings

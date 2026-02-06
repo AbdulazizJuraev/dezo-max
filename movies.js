@@ -19,7 +19,7 @@ const moviesData = [
         year: 2021,
         duration: "1h 58min",
         quality: "4K",
-        poster: "https://i.postimg.cc/C5mrM9gh/red-notice.jpg",
+        poster: "https://cdn.marvel.com/content/2x/dplus_lob_mas_dsk_05.jpg",
         studio: "Netflix",
         trailer: "https://www.youtube.com/embed/RjNcTBXTk4I",
         cast: ["Dwayne Johnson", "Ryan Reynolds", "Gal Gadot"],
@@ -45,7 +45,7 @@ const moviesData = [
         year: 2019,
         duration: "2h 8min",
         quality: "4K",
-        poster: "https://i.postimg.cc/8zQvJxK5/6-underground.jpg",
+        poster: "https://cdn.marvel.com/content/2x/dplus_lob_mas_dsk_05.jpg",
         studio: "Netflix",
         trailer: "https://www.youtube.com/embed/YLE85ol-jjp",
         cast: ["Ryan Reynolds", "Mélanie Laurent", "Manuel Garcia-Rulfo"],
@@ -101,6 +101,33 @@ const moviesData = [
         quality: "4K",
         poster: "img/239534-spider-man-homecoming-poster.jpg",
         studio: "Marvel",
+        trailer: "https://fayllar1.ru/14/kinolar/O%27rgimchak%20odam%20U.Y.Y%202160p%20O%27zbek%20tilida%20(asilmedia.net).mp4",
+        cast: ["Tom Holland", "Michael Keaton", "Robert Downey Jr."],
+        ratings: {
+            imdb: 7.4,
+            rottenTomatoes: 92,
+            dezo: 8.0
+        }
+    },
+
+    {
+        id: 2,
+        title: {
+            uz: "O'rgimchak-odam: Uyga qaytish",
+            ru: "Человек-паук: Возвращение домой",
+            en: "Spider-Man: Homecoming"
+        },
+        description: {
+            uz: "Piter Parker oddiy o'rta maktab o'quvchisi va superqahramon sifatida hayotini muvozanatlashtiradi.",
+            ru: "Питер Паркер балансирует между жизнью обычного старшеклассника и супергероя.",
+            en: "Peter Parker balances his life as an ordinary high school student with being a superhero."
+        },
+        genre: ["action", "adventure"],
+        year: 2017,
+        duration: "2h 13min",
+        quality: "4K",
+        poster: "img/239534-spider-man-homecoming-poster.jpg",
+        studio: "Marvel",
         trailer: "https://www.youtube.com/embed/U0D3AOldjMU",
         cast: ["Tom Holland", "Michael Keaton", "Robert Downey Jr."],
         ratings: {
@@ -109,6 +136,36 @@ const moviesData = [
             dezo: 8.0
         }
     },
+
+    
+
+    {
+        id: 4,
+        title: {
+            uz: "Abadiylar",
+            ru: "Вечные",
+            en: "Eternals"
+        },
+        description: {
+            uz: "Yerdagi abadiy mavjudotlar qabilasining afsonasi.",
+            ru: "Сага о Вечных, расе бессмертных существ, живших на Земле.",
+            en: "The saga of the Eternals, a race of immortal beings who lived on Earth."
+        },
+        genre: ["Sifati: 1080p", "Fantastika"],
+        year: 2021,
+        duration: "2h 37min",
+        quality: "4K",
+        poster: "https://i.postimg.cc/c4YNZM9V/eternals.jpg",
+        studio: "Marvel",
+        trailer: "https://www.youtube.com/embed/x_me3xsvDgk",
+        cast: ["Gemma Chan", "Richard Madden", "Angelina Jolie"],
+        ratings: {
+            imdb: 6.3,
+            rottenTomatoes: 47,
+            dezo: 7.0
+        }
+    },
+
     {
         id: 4,
         title: {
@@ -135,6 +192,7 @@ const moviesData = [
             dezo: 7.0
         }
     },
+
     {
         id: 7,
         title: {
@@ -161,6 +219,34 @@ const moviesData = [
             dezo: 8.2
         }
     },
+
+    {
+        id: 7,
+        title: {
+            uz: "Shang-Chi va O'n Uzuklar Afsonasi",
+            ru: "Шан-Чи и легенда десяти колец",
+            en: "Shang-Chi and the Legend of the Ten Rings"
+        },
+        description: {
+            uz: "Jang san'ati ustasi Shang-Chi o'zining o'tmishini qoldirgan deb o'ylagan narsa bilan yuzlashadi.",
+            ru: "Мастер боевых искусств Шан-Чи сталкивается с прошлым, которое он думал, что оставил позади.",
+            en: "Martial-arts master Shang-Chi confronts the past he thought he left behind."
+        },
+        genre: ["action", "fantasy"],
+        year: 2021,
+        duration: "2h 12min",
+        quality: "4K",
+        poster: "https://i.postimg.cc/d1vhmV70/shang-chi.jpg",
+        studio: "Marvel",
+        trailer: "https://www.youtube.com/embed/8YjFbMbfXaE",
+        cast: ["Simu Liu", "Awkwafina", "Tony Leung"],
+        ratings: {
+            imdb: 7.4,
+            rottenTomatoes: 91,
+            dezo: 8.2
+        }
+    },
+
     {
         id: 10,
         title: {
@@ -187,6 +273,34 @@ const moviesData = [
             dezo: 8.7
         }
     },
+
+    {
+        id: 10,
+        title: {
+            uz: "Qora Pantera",
+            ru: "Черная пантера",
+            en: "Black Panther"
+        },
+        description: {
+            uz: "T'Challa Vakandaga uyga qaytib qirol bo'lishi kerak, lekin uning suvereniteti qiyinchiliklarga duch keladi.",
+            ru: "Т'Чалла возвращается домой в Ваканду, чтобы стать королем, но его суверенитет подвергается сомнению.",
+            en: "T'Challa returns home to Wakanda to become king, but finds his sovereignty challenged."
+        },
+        genre: ["action", "adventure"],
+        year: 2018,
+        duration: "2h 14min",
+        quality: "4K",
+        poster: "https://i.postimg.cc/hjjBqk6r/panther.jpg",
+        studio: "Marvel",
+        trailer: "https://s11.faylmovi.ru/tarjima_kinolar/Qora_pantera_1080.mp4",
+        cast: ["Chadwick Boseman", "Michael B. Jordan", "Lupita Nyong'o"],
+        ratings: {
+            imdb: 7.3,
+            rottenTomatoes: 96,
+            dezo: 8.7
+        }
+    },
+
     {
         id: 16,
         title: {
@@ -213,6 +327,34 @@ const moviesData = [
             dezo: 9.2
         }
     },
+
+    {
+        id: 16,
+        title: {
+            uz: "Qasoskorlar: Oxirgi o'yin",
+            ru: "Мстители: Финал",
+            en: "Avengers: Endgame"
+        },
+        description: {
+            uz: "Cheksizlik urushi halokatli voqealariidan keyin koinot vayron bo'lgan.",
+            ru: "После разрушительных событий Войны бесконечности вселенная в руинах.",
+            en: "After the devastating events of Infinity War, the universe is in ruins."
+        },
+        genre: ["action", "scifi"],
+        year: 2019,
+        duration: "3h 1min",
+        quality: "4K",
+        poster: "https://avatars.mds.yandex.net/i?id=7c1659452ca8d57e90f647eb8de8bd753caef8c2-5587421-images-thumbs&n=13https://cdn.marvel.com/content/2x/avengersendgame_lob_crd_05.jpg",
+        studio: "Marvel",
+        trailer: "https://www.youtube.com/embed/TcMBFSGVi1c",
+        cast: ["Robert Downey Jr.", "Chris Evans", "Mark Ruffalo"],
+        ratings: {
+            imdb: 8.5,
+            rottenTomatoes: 94,
+            dezo: 9.2
+        }
+    },
+
     {
         id: 18,
         title: {
@@ -239,6 +381,35 @@ const moviesData = [
             dezo: 7.5
         }
     },
+    
+
+    {
+        id: 18,
+        title: {
+            uz: "Kapitan Marvel",
+            ru: "Капитан Марвел",
+            en: "Captain Marvel"
+        },
+        description: {
+            uz: "Kerol Danvers koinotning eng kuchli qahramonlaridan biriga aylanadi.",
+            ru: "Кэрол Дэнверс становится одним из самых могущественных героев вселенной.",
+            en: "Carol Danvers becomes one of the universe's most powerful heroes."
+        },
+        genre: ["action", "scifi"],
+        year: 2019,
+        duration: "2h 4min",
+        quality: "4K",
+        poster: "https://i.postimg.cc/v85swtSC/captain-marvel.jpg",
+        studio: "Marvel",
+        trailer: "https://www.youtube.com/embed/Z1BCujX3pw8",
+        cast: ["Brie Larson", "Samuel L. Jackson", "Ben Mendelsohn"],
+        ratings: {
+            imdb: 6.8,
+            rottenTomatoes: 79,
+            dezo: 7.5
+        }
+    },
+
     {
         id: 23,
         title: {

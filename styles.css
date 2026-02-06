@@ -27,7 +27,7 @@
     --fw6: 600;
     --fw5: 500;
 
-    --padding-x: 120px;
+    --padding-x: 0px;
 }
 
 .genre4{
@@ -215,6 +215,7 @@ header.scrolled::before {
     margin-bottom: 60px;
     position: relative;
     padding-bottom: 20px;
+    padding: 0px 0px 0px 70px;
 }
 
 .section-heading::after{
@@ -226,6 +227,7 @@ header.scrolled::before {
     height: 3px;
     background: linear-gradient(90deg, var(--light-azure), transparent);
     border-radius: 2px;
+    margin: 0px 0px 0px 70px;
 }
 
 /*HEADER*/
@@ -377,10 +379,11 @@ header.scrolled::before {
 }
 
 .navbar-form-btn{
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0);
     position: absolute;
     top: calc(14% - 0px);
-    right: 25px;
+    right: 10px;
+    padding: 5px;
 }
 
 .navbar-form-btn ion-icon, .navbar-search-btn ion-icon{
@@ -509,7 +512,7 @@ header.scrolled::before {
     top: 60%;
     transform: translateY(-60%);
     z-index: 10;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0);
     border: none;
     width: 50px;
     height: 50px;
@@ -521,6 +524,7 @@ header.scrolled::before {
     transition: all 1s ease;
     color: var(--white);
     font-size: 24px;
+    display: none;
 }
 
 .carousel-control-prev{
@@ -1032,6 +1036,8 @@ input ~ .checked-radio-bg{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px;
+    padding: 40px;
+    display: flex;
 }
 
 .live-card{ 
@@ -1863,7 +1869,7 @@ footer{
 
 .page-section.active{
     display: block;
-    padding: 0px 50px 50px 50px;
+    padding: 0px;
 }
 
 /*TV CHANNELS*/
@@ -2435,9 +2441,10 @@ footer{
 
 .modal-poster{
     position: relative;
-    border-radius: 15px;
+    border-radius: 30px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgb(56, 56, 56);
+    height: 400px;
 }
 
 .modal-poster img{
@@ -2795,7 +2802,7 @@ footer{
         header.active{ top: 250px;}
 
     .navbar{
-        grid-template-columns: 200px 1fr auto;
+        grid-template-columns: 350px 1fr auto;
         gap: 20px;
     }
     
@@ -3397,5 +3404,170 @@ footer{
         right: 20px;
         left: 20px;
         max-width: none;
+    }
+}
+
+/* ==================== Movies Carousel Page (Show more) ==================== */
+.movies-carousel-page {
+    padding: 1.5rem 1rem 3rem;
+    max-width: 100%;
+}
+
+.carousel-page-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--light-azure, #2196f3);
+    text-decoration: none;
+    font-size: var(--font-size-small, 0.9rem);
+    font-weight: var(--fw5, 600);
+    margin-bottom: 1.25rem;
+    transition: opacity 0.2s ease;
+}
+
+.carousel-page-back:hover {
+    opacity: 0.85;
+    color: var(--light-azure, #2196f3);
+}
+
+.carousel-page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--white, #fff);
+}
+
+.movies-carousel-wrapper {
+    position: relative;
+    margin: 0 -0.5rem;
+}
+
+.movies-carousel-track-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding: 0.5rem 0;
+}
+
+.movies-carousel-track-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.movies-carousel-track-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+}
+
+.movies-carousel-track-container::-webkit-scrollbar-thumb {
+    background: var(--light-azure, #2196f3);
+    border-radius: 3px;
+}
+
+.movies-carousel-track {
+    display: flex;
+    flex-direction: row;
+    gap: 1.25rem;
+    padding: 0 0.5rem;
+    width: max-content;
+}
+
+.movies-carousel-card {
+    flex: 0 0 auto;
+    width: 160px;
+    min-height: 280px;
+    scroll-snap-align: start;
+}
+
+.movies-carousel-card .card-head {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+    border-radius: inherit;
+}
+
+.movies-carousel-card .card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.movies-carousel-card .card-body {
+    padding: 0.5rem 0 0;
+}
+
+.movies-carousel-track-container {
+    scroll-snap-type: x mandatory;
+}
+
+.carousel-arrow {
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    cursor: pointer;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.carousel-arrow:hover {
+    background: rgba(33, 150, 243, 0.9);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-arrow-prev { left: 0.5rem; }
+.carousel-arrow-next { right: 0.5rem; }
+
+.carousel-arrow ion-icon {
+    font-size: 1.5rem;
+}
+
+.movies-carousel-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--white, #fff);
+    font-size: 1.1rem;
+}
+
+@media (min-width: 768px) {
+    .movies-carousel-page {
+        padding: 20px;
+    }
+    .movies-carousel-card {
+        width: 180px;
+        min-height: 320px;
+    }
+    .carousel-arrow {
+        display: none;
+    }
+    .movies-carousel-track-container {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .movies-carousel-page {
+        padding: 2rem 3rem 4rem;
+    }
+    .carousel-page-title {
+        font-size: 2rem;
+    }
+    .movies-carousel-card {
+        width: 200px;
+        min-height: 340px;
+    }
+    .movies-carousel-track {
+        gap: 1.5rem;
     }
 }

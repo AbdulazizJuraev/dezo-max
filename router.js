@@ -7,6 +7,7 @@ class Router {
             'home': { page: 'home', section: 'home-section' },
             'tv': { page: 'tv', section: 'tv-section' },
             'movies': { page: 'movies', section: 'movies-section' },
+            'movies-carousel': { page: 'movies-carousel', section: 'movies-carousel-section' },
             'series': { page: 'series', section: 'series-section' },
             'cartoons': { page: 'cartoons', section: 'cartoons-section' },
             'anime': { page: 'anime', section: 'anime-section' },
@@ -127,6 +128,11 @@ class Router {
                 // Re-render movies on home page
                 if (typeof filterAndRenderMovies === 'function') {
                     filterAndRenderMovies();
+                }
+                break;
+            case 'movies-carousel':
+                if (typeof initMoviesCarousel === 'function') {
+                    initMoviesCarousel();
                 }
                 break;
         }
