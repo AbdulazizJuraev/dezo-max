@@ -234,13 +234,11 @@ header.scrolled::before {
 
 .navbar{
     height: 100px;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    display: flex;
     align-items: center;
-    gap: 30px;
     position: relative;
-    padding: 10px 30px 10px 30px; 
-    z-index: 2;
+    padding: 10px; 
+   
 }
 
 /* Hidden on desktop; shown in mobile media query below */
@@ -1038,7 +1036,7 @@ input ~ .checked-radio-bg{
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px;
     padding: 40px;
-    display: flex;
+   
 }
 
 .live-card{ 
@@ -1151,7 +1149,7 @@ footer{
     justify-content: space-between;
     align-items: flex-start;
     border-bottom: 1px solid var(--oxford-blue-50);
-    padding-bottom: 80px;
+    padding: 40px;
 }
 
 .footer-brand{
@@ -2358,6 +2356,8 @@ footer{
     }
 }
 
+
+
 /*MOVIE MODAL*/
 .movie-modal{
     position: fixed;
@@ -2808,7 +2808,6 @@ footer{
         header.active{ top: 250px;}
 
     .navbar{
-        grid-template-columns: 350px 1fr auto;
         gap: 20px;
     }
     
@@ -3311,7 +3310,6 @@ ease;
     }
     
 .navbar{
-    grid-template-columns: 180px 1fr auto;
     gap: 20px;
 
 }
