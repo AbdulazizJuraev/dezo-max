@@ -503,35 +503,12 @@ header {
     opacity: 1;
 }
 
-/* Animated gradient background (full viewport, smooth loop) */
+/* Search overlay: semi-transparent 30%, full viewport, behind content */
 .search-panel-overlay{
     position: absolute;
     inset: 0;
     cursor: pointer;
-    overflow: hidden;
-    background: linear-gradient(
-        135deg,
-        #2a2a2a 0%,
-        #363636 20%,
-        #393939 40%,
-        #404040 60%,
-        #363636 80%,
-        #2e2e2e 100%
-    );
-    background-size: 400% 400%;
-    animation: searchOverlayGradient 20s ease-in-out infinite;
-}
-.search-panel-overlay::after{
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.2);
-    pointer-events: none;
-}
-@keyframes searchOverlayGradient {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .search-panel-content{
@@ -559,18 +536,22 @@ header {
         0 0 80px rgba(0, 0, 0, 0.3);
 }
 
+.search-panel-form{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .search-panel-close{
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 40px;
-    height: 40px;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
     border: none;
-    border-radius: 10px;
+    border-radius: 14px;
     background: var(--theme-surface);
     color: var(--off-white);
     cursor: pointer;
@@ -579,18 +560,11 @@ header {
 .search-panel-close:hover{
     background: var(--theme-surface-hover);
     color: var(--white);
-    transform: rotate(90deg);
+    transform: scale(1.05);
 }
 .search-panel-close:focus{
     outline: none;
     box-shadow: 0 0 0 2px var(--theme-border-focus);
-}
-
-.search-panel-form{
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 8px;
 }
 .search-panel-form .navbar-form-search{
     padding: 14px 20px;
@@ -637,6 +611,7 @@ header {
         font-size: var(--font-size-small);
         padding: 12px 16px;
     }
+    .search-panel-close,
     .search-panel-submit{
         width: 44px;
         height: 44px;
