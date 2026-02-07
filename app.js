@@ -83,18 +83,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.navbar-nav .navbar-link');
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            // Small delay to allow route navigation first
-            setTimeout(() => {
-                closeNavMenu();
-            }, 100);
+            setTimeout(() => closeNavMenu(), 100);
         });
     });
 });
 
+const searchPanel = document.getElementById('searchPanel');
+const searchPanelOverlay = document.getElementById('searchPanelOverlay');
+const searchTriggerBtn = document.getElementById('searchTriggerBtn');
+
+function openSearchPanel() {
+    if (!searchPanel) return;
+    searchPanel.classList.add('active');
+    searchPanel.setAttribute('aria-hidden', 'false');
+    if (searchTriggerBtn) searchTriggerBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+        if (navbarFormSearch) {
+            navbarFormSearch.focus();
+        }
+    });
+}
+
+function closeSearchPanel() {
+    if (!searchPanel) return;
+    searchPanel.classList.remove('active');
+    searchPanel.setAttribute('aria-hidden', 'true');
+    if (searchTriggerBtn) {
+        searchTriggerBtn.setAttribute('aria-expanded', 'false');
+        searchTriggerBtn.focus();
+    }
+    document.body.style.overflow = '';
+}
+
 function searchBarIsActive() {
-    navbarForm.classList.toggle('active');
-    if (navbarForm.classList.contains('active')) {
-        navbarFormSearch.focus();
+    if (searchPanel && searchPanel.classList.contains('active')) {
+        closeSearchPanel();
+    } else {
+        openSearchPanel();
     }
 }
 
@@ -519,13 +545,11 @@ function filterAndRenderMovies() {
 // ==================== Search Function ====================
 function handleSearch(e) {
     e.preventDefault();
-    currentFilters.search = navbarFormSearch.value.trim();
-    filterAndRenderMovies();
-    
-    // Close search on mobile
-    if (window.innerWidth <= 1200) {
-        searchBarIsActive();
+    if (navbarFormSearch) {
+        currentFilters.search = navbarFormSearch.value.trim();
+        filterAndRenderMovies();
     }
+    closeSearchPanel();
 }
 
 // ==================== Movie Details Modal ====================
@@ -865,15 +889,15 @@ function renderBanner() {
                         <img src="${bannerPoster}" alt="${title}" class="banner-img" data-poster="${bannerPoster}">
                         <div class="card-content">
                             <div class="card-info">
-                                <div class="genre4">
+                                <div>
                                     <ion-icon name="film"></ion-icon>
                                     <span class="asos">${genre}</span>
                                 </div>
-                                <div class="genre4">
+                                <div>
                                     <ion-icon name="calendar"></ion-icon>
                                     <span class="asos">${movie.year}</span>
                                 </div>
-                                <div class="genre4">
+                                <div>
                                     <ion-icon name="time"></ion-icon>
                                     <span class="asos">${movie.duration}</span>
                                 </div>
@@ -1063,11 +1087,24 @@ function resetCarousel() {
 }
 
 // ==================== Event Listeners ====================
-navbarMenuBtn.addEventListener('click', navIsActive);
-navbarSearchBtn.addEventListener('click', searchBarIsActive);
-navbarFormCloseBtn.addEventListener('click', searchBarIsActive);
-navbarForm.addEventListener('submit', handleSearch);
-navbarFormSearch.addEventListener('input', (e) => {
+// Hamburger: use delegation so it works even if DOM order/loading varies; ensure mobile menu opens
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.navbar-menu-btn')) {
+        e.preventDefault();
+        e.stopPropagation();
+        navIsActive();
+    }
+});
+if (navbarSearchBtn) navbarSearchBtn.addEventListener('click', (e) => { e.preventDefault(); searchBarIsActive(); });
+if (navbarFormCloseBtn) navbarFormCloseBtn.addEventListener('click', (e) => { e.preventDefault(); closeSearchPanel(); });
+if (searchPanelOverlay) searchPanelOverlay.addEventListener('click', closeSearchPanel);
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && searchPanel && searchPanel.classList.contains('active')) {
+        closeSearchPanel();
+    }
+});
+if (navbarForm) navbarForm.addEventListener('submit', handleSearch);
+if (navbarFormSearch) navbarFormSearch.addEventListener('input', (e) => {
     const searchValue = e.target.value.trim();
     currentFilters.search = searchValue;
     

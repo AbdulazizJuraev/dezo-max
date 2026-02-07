@@ -13,18 +13,33 @@
     <div class="container">
         <header class="">
             <div class="navbar">
-                <button class="navbar-menu-btn">
-                    <span class="one"></span>
-                    <span class="two"></span>
-                    <span class="three"></span>
-                </button>
-
+                <!-- Left: logo (30px from edge), then hamburger + nav menu -->
                 <div class="navbar-logo-container">
                     <a href="#" class="navbar-brand">
-                        <img src="img/logo/dezo max.png" alt="DezoMax Logo">
+                        <img src="img/logo/LogoTip.png" alt="DEZO MAX" class="navbar-brand-img">
+                    </a>
+                </div>
+                <div class="navbar-left">
+                    <button class="navbar-menu-btn">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                    </button>
+                </div>
+
+                <!-- Right: search icon + sign-in (search form lives in expandable panel) -->
+                <div class="navbar-actions">
+                    <button type="button" class="navbar-search-btn" id="searchTriggerBtn" aria-label="Open search" aria-expanded="false" aria-haspopup="true">
+                        <ion-icon name="search"></ion-icon>
+                    </button>
+
+                    <a href="#" class="navbar-signin" id="loginBtn">
+                        <span data-i18n="auth.login">Kirish</span>
+                        <ion-icon name="log-in"></ion-icon>
                     </a>
                 </div>
 
+                <!-- Second row: desktop nav links (below top row); mobile slide-out -->
                 <nav class="navbar-menu">
                     <button class="navbar-menu-close" aria-label="Close menu">
                         <ion-icon name="close"></ion-icon>
@@ -41,31 +56,24 @@
                         <li><a href="#" class="navbar-link" data-route="favorites" data-i18n="nav.favorites">Sevimlilar</a></li>
                     </ul>
                 </nav>
-
-                <div class="navbar-actions">
-                    <form action="#" class="navbar-form">
-                        <input type="text" name="search" data-i18n="search.placeholder" placeholder="Film Izlash..." class="navbar-form-search">
-
-                        <button class="navbar-form-btn">
-                            <ion-icon name="search"></ion-icon>
-                        </button>
-    
-                        <button class="navbar-form-close">
-                            <ion-icon name="close-circle-outline"></ion-icon>
-                        </button>
-                    </form>
-
-                    <button class="navbar-search-btn">
-                        <ion-icon name="search"></ion-icon>
-                    </button>
-
-                    <a href="#" class="navbar-signin" id="loginBtn">
-                        <span data-i18n="auth.login">Kirish</span>
-                        <ion-icon name="log-in"></ion-icon>
-                    </a>
-                </div>
             </div>
         </header>
+
+        <!-- Search panel (expandable overlay); form here so existing search JS still works -->
+        <div class="search-panel" id="searchPanel" role="dialog" aria-modal="true" aria-label="Search" aria-hidden="true">
+            <div class="search-panel-overlay" id="searchPanelOverlay"></div>
+            <div class="search-panel-content">
+                <button type="button" class="search-panel-close navbar-form-close" aria-label="Close search">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+                <form action="#" class="navbar-form search-panel-form" id="searchPanelForm">
+                    <input type="text" name="search" data-i18n="search.placeholder" placeholder="Film Izlash..." class="navbar-form-search" id="searchPanelInput" autocomplete="off">
+                    <button type="submit" class="search-panel-submit" aria-label="Submit search">
+                        <ion-icon name="search"></ion-icon>
+                    </button>
+                </form>
+            </div>
+        </div>
 
         <!-- Auth Modals -->
         <div class="auth-modal" id="authModal">
